@@ -30,14 +30,14 @@ const projects = [
 ];
 
 const skills = [
-  { name: "HTML", level: 90 },
-  { name: "CSS", level: 85 },
-  { name: "JavaScript", level: 80 },
-  { name: "Python", level: 75 },
-  { name: "React", level: 70 },
-  { name: "TailwindCSS", level: 85 },
+  { name: "HTML", level: 75 },
+  { name: "CSS", level: 70 },
+  { name: "JavaScript", level: 65 },
+  { name: "Python", level: 70 },
+  { name: "React", level: 65 },
+  { name: "TailwindCSS", level: 60 },
   { name: "Git", level: 75 },
-  { name: "GitHub", level: 80 }
+  { name: "GitHub", level: 75 }
 ];
 
 export default function Portfolio() {
