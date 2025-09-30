@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Github, Mail, ExternalLink, ArrowUp, Sparkles, Code2, Palette } from "lucide-react";
+import { Github, Mail, ExternalLink, ArrowUp, Sparkles, Code2, Palette, GraduationCap, Calendar } from "lucide-react";
 
 const profile = {
   name: "Trin Tantrakul",
@@ -29,15 +29,30 @@ const projects = [
   },
 ];
 
+const education = [
+  {
+    school: "Chakkam Khanathon Lamphun School",
+    degree: "High School",
+    field: "English Program",
+    period: "2019 - now",
+    description: "Focused on computer science and mathematics. Participated in coding competitions and developed web applications.",
+    achievements: [
+      "GPA: 3.67/4.0",
+      "Member of HPC Ignite",
+      "Member of Association for Computing Machinery (ACM)"
+    ]
+  },
+];
+
 const skills = [
-  { name: "HTML", level: 75 },
-  { name: "CSS", level: 70 },
-  { name: "JavaScript", level: 65 },
-  { name: "Python", level: 70 },
-  { name: "React", level: 65 },
-  { name: "TailwindCSS", level: 60 },
+  { name: "HTML", level: 90 },
+  { name: "CSS", level: 85 },
+  { name: "JavaScript", level: 80 },
+  { name: "Python", level: 75 },
+  { name: "React", level: 70 },
+  { name: "TailwindCSS", level: 85 },
   { name: "Git", level: 75 },
-  { name: "GitHub", level: 75 }
+  { name: "GitHub", level: 80 }
 ];
 
 export default function Portfolio() {
@@ -48,7 +63,7 @@ export default function Portfolio() {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
       
-      const sections = ['about', 'projects', 'skills', 'contact'];
+      const sections = ['about', 'projects', 'education', 'skills', 'contact'];
       const current = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -84,7 +99,7 @@ export default function Portfolio() {
             {profile.name}
           </h1>
           <nav className="flex gap-6 text-sm" aria-label="Main navigation">
-            {['about', 'projects', 'skills', 'contact'].map((section) => (
+            {['about', 'projects', 'education', 'skills', 'contact'].map((section) => (
               <a 
                 key={section}
                 href={`#${section}`} 
@@ -226,10 +241,73 @@ export default function Portfolio() {
         </div>
       </section>
 
+      {/* Education Section */}
+      <section id="education" className="max-w-5xl mx-auto px-6 py-20">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+            <GraduationCap className="w-4 h-4" />
+            My Journey
+          </div>
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+            Education
+          </h2>
+        </div>
+
+        <div className="space-y-8">
+          {education.map((edu, index) => (
+            <article
+              key={index}
+              className="group bg-slate-800/50 backdrop-blur-sm border-2 border-blue-500/20 rounded-3xl p-8 shadow-xl shadow-blue-500/5 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:border-blue-400/40"
+            >
+              <div className="flex items-start gap-6">
+                {/* Icon */}
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <GraduationCap className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-grow">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors mb-1">
+                        {edu.school}
+                      </h3>
+                      <p className="text-lg text-blue-400 font-semibold">
+                        {edu.degree} • {edu.field}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full">
+                      <Calendar className="w-4 h-4 text-blue-400" />
+                      <span className="text-sm text-blue-400 font-medium">{edu.period}</span>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-400 leading-relaxed mb-4">
+                    {edu.description}
+                  </p>
+
+                  {/* Achievements */}
+                  <div className="space-y-2">
+                    {edu.achievements.map((achievement, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full"></div>
+                        <p className="text-gray-300 text-sm">{achievement}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       {/* Skills Section */}
       <section id="skills" className="max-w-5xl mx-auto px-6 py-20">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-2 rounded-full text-sm font-semibold mb-4">
             <Palette className="w-4 h-4" />
             What I Do
           </div>
