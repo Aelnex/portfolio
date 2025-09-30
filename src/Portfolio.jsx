@@ -35,7 +35,7 @@ const education = [
     degree: "High School",
     field: "English Program",
     period: "2019 - now",
-    description: "Focused on computer science and mathematics. Participated in coding competitions and developed web applications.",
+    description: "Focused on computer . Participated in coding competitions and developed web applications.",
     achievements: [
       "GPA: 3.67/4.0",
       "Member of HPC Ignite",
