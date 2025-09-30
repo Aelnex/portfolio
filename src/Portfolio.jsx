@@ -7,7 +7,7 @@ const profile = {
   email: "manuiopface@gmail.com",
   github: "https://github.com/Aelnex",
   linkedin: "https://linkedin.com/in/trin-tantrakul",
-  image: "https://github.com/Aelnex.png"
+  image: "https://media.discordapp.net/attachments/995243160861159474/1422642686841585785/PUI_2698.jpg?ex=68dd6abf&is=68dc193f&hm=68b5dbebe3e7cc11915271e229e0e60f5fb7c1a2883319273533036598f51991&=&format=webp&width=640&height=960"
 };
 
 const projects = [
