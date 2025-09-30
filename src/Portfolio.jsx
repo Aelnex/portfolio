@@ -13,17 +13,17 @@ const profile = {
 const projects = [
   {
     title: "TADDO AI",
-    description: "เว็บไซต์แนะนำตัวและรวมผลงาน พัฒนาด้วย HTML, CSS, Javascript และ React",
+    description: "เว็บไซต์ที่นำไปแข่งขัน พัฒนาด้วย HTML, CSS, Javascript และ React",
     link: "https://aelnex.github.io/pruning-ai/",
     code: "https://github.com/Aelnex/pruning-ai",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=300&fit=crop" // placeholder รูปสวยๆ
+    image: "https://media.discordapp.net/attachments/995243160861159474/1422605616915943455/image.png?ex=68dd4839&is=68dbf6b9&hm=1bbdf251d9614fd2ca7d13f145fa1cb2bd6fcf79604cb1053845ce4d74ba0f6c&=&format=webp&quality=lossless" // placeholder รูปสวยๆ
   },
   {
-    title: "School Canteen Survey Analysis",
+    title: "My Weather",
     description: "โครงงานวิเคราะห์ข้อมูลแบบสอบถามด้วย Python (Pandas, Matplotlib) และทำเว็บรายงานผล",
-    link: "#", // 👉 ใส่ลิงก์จริงตรงนี้เมื่อมี demo
-    code: "https://github.com/Aelnex/canteen-survey",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop" // placeholder รูปกราฟ
+    link: "https://aelnex.github.io/myweather/", // 👉 ใส่ลิงก์จริงตรงนี้เมื่อมี demo
+    code: "https://github.com/Aelnex/myweather",
+    image: "https://media.discordapp.net/attachments/995243160861159474/1422606130059939850/image.png?ex=68dd48b4&is=68dbf734&hm=ce45b92e3061c63173d0842b2c0f834c597974b04951b45d19719de80a9878e7&=&format=webp&quality=lossless" // placeholder รูปกราฟ
   },
 ];
 
@@ -58,8 +58,9 @@ export default function Portfolio() {
         <h2 className="text-3xl font-bold mb-2">{profile.name}</h2>
         <p className="text-gray-600 mb-6">{profile.role}</p>
         <p className="text-gray-700 max-w-2xl mx-auto leading-relaxed">
-          ผมเป็นนักเรียนที่สนใจการพัฒนาเว็บไซต์ ชอบใช้ภาษา HTML, CSS, JavaScript และ Python
-          ในการทำโปรเจกต์จริง ฝึกฝนการสร้างเว็บที่ใช้งานง่าย เรียบง่าย และตอบโจทย์ผู้ใช้
+          I'm a student passionate about web development. I enjoy building 
+         user-friendly websites using HTML, CSS, JavaScript, Python, and React. 
+         Always learning and exploring new technologies to create better digital experiences.
         </p>
         
         {/* Social Links */}
