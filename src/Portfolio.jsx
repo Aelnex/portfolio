@@ -1,13 +1,13 @@
-import React from "react";
-import { Github, Linkedin, Mail, ExternalLink } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Github, Mail, ExternalLink, ArrowUp, Sparkles, Code2, Palette } from "lucide-react";
 
 const profile = {
   name: "Trin Tantrakul",
   role: "Student • Web Developer",
   email: "manuiopface@gmail.com",
   github: "https://github.com/Aelnex",
-  linkedin: "https://linkedin.com/in/trin-tantrakul", // เพิ่ม LinkedIn
-  image: "https://avatars.githubusercontent.com/u/YOUR_GITHUB_ID?v=4" // 👉 เปลี่ยนเป็น GitHub avatar หรือใช้ URL รูปของคุณ
+  linkedin: "https://linkedin.com/in/trin-tantrakul",
+  image: "https://github.com/Aelnex.png"
 };
 
 const projects = [
@@ -16,112 +16,208 @@ const projects = [
     description: "เว็บไซต์ที่นำไปแข่งขัน พัฒนาด้วย HTML, CSS, Javascript และ React",
     link: "https://aelnex.github.io/pruning-ai/",
     code: "https://github.com/Aelnex/pruning-ai",
-    image: "https://media.discordapp.net/attachments/995243160861159474/1422605616915943455/image.png?ex=68dd4839&is=68dbf6b9&hm=1bbdf251d9614fd2ca7d13f145fa1cb2bd6fcf79604cb1053845ce4d74ba0f6c&=&format=webp&quality=lossless" // placeholder รูปสวยๆ
+    image: "https://media.discordapp.net/attachments/995243160861159474/1422605616915943455/image.png?ex=68dd4839&is=68dbf6b9&hm=1bbdf251d9614fd2ca7d13f145fa1cb2bd6fcf79604cb1053845ce4d74ba0f6c&=&format=webp&quality=lossless",
+    tags: ["React", "JavaScript", "HTML/CSS"]
   },
   {
     title: "My Weather",
     description: "โครงงานวิเคราะห์ข้อมูลแบบสอบถามด้วย Python (Pandas, Matplotlib) และทำเว็บรายงานผล",
-    link: "https://aelnex.github.io/myweather/", // 👉 ใส่ลิงก์จริงตรงนี้เมื่อมี demo
+    link: "https://aelnex.github.io/myweather/",
     code: "https://github.com/Aelnex/myweather",
-    image: "https://media.discordapp.net/attachments/995243160861159474/1422606130059939850/image.png?ex=68dd48b4&is=68dbf734&hm=ce45b92e3061c63173d0842b2c0f834c597974b04951b45d19719de80a9878e7&=&format=webp&quality=lossless" // placeholder รูปกราฟ
+    image: "https://media.discordapp.net/attachments/995243160861159474/1422606130059939850/image.png?ex=68dd48b4&is=68dbf734&hm=ce45b92e3061c63173d0842b2c0f834c597974b04951b45d19719de80a9878e7&=&format=webp&quality=lossless",
+    tags: ["Python", "Data Analysis"]
   },
 ];
 
 const skills = [
-  "HTML", "CSS", "JavaScript", "Python", "React", "TailwindCSS", "Git", "GitHub"
+  { name: "HTML", level: 90 },
+  { name: "CSS", level: 85 },
+  { name: "JavaScript", level: 80 },
+  { name: "Python", level: 75 },
+  { name: "React", level: 70 },
+  { name: "TailwindCSS", level: 85 },
+  { name: "Git", level: 75 },
+  { name: "GitHub", level: 80 }
 ];
 
 export default function Portfolio() {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [activeSection, setActiveSection] = useState('about');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+      
+      const sections = ['about', 'projects', 'skills', 'contact'];
+      const current = sections.find(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 100 && rect.bottom >= 100;
+        }
+        return false;
+      });
+      if (current) setActiveSection(current);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white font-sans">
+      {/* Animated Background Blobs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-cyan-400 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-20 left-20 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-sm">
-        <h1 className="font-bold text-xl text-gray-800">{profile.name}</h1>
-        <nav className="flex gap-6 text-sm" aria-label="Main navigation">
-          <a href="#about" className="hover:text-blue-600 transition">About</a>
-          <a href="#projects" className="hover:text-blue-600 transition">Projects</a>
-          <a href="#skills" className="hover:text-blue-600 transition">Skills</a>
-          <a href="#contact" className="hover:text-blue-600 transition">Contact</a>
-        </nav>
+      <header className="bg-slate-900/80 backdrop-blur-md border-b border-blue-500/20 sticky top-0 z-50 px-6 py-4 shadow-lg shadow-blue-500/10">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <h1 className="font-bold text-xl bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+            {profile.name}
+          </h1>
+          <nav className="flex gap-6 text-sm" aria-label="Main navigation">
+            {['about', 'projects', 'skills', 'contact'].map((section) => (
+              <a 
+                key={section}
+                href={`#${section}`} 
+                className={`capitalize transition-all duration-300 ${
+                  activeSection === section 
+                    ? 'text-blue-400 font-semibold' 
+                    : 'text-gray-400 hover:text-blue-400'
+                }`}
+              >
+                {section}
+              </a>
+            ))}
+          </nav>
+        </div>
       </header>
 
-      {/* Hero / About Me */}
-      <section id="about" className="max-w-4xl mx-auto px-6 py-16 text-center">
-        <img
-          src={profile.image}
-          alt={`${profile.name} - Profile Photo`}
-          className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-white shadow-lg"
-          onError={(e) => {
-            e.target.src = "https://ui-avatars.com/api/?name=Trin+Tantrakul&size=128&background=3b82f6&color=fff";
-          }}
-        />
-        <h2 className="text-3xl font-bold mb-2">{profile.name}</h2>
-        <p className="text-gray-600 mb-6">{profile.role}</p>
-        <p className="text-gray-700 max-w-2xl mx-auto leading-relaxed">
+      {/* Hero Section */}
+      <section id="about" className="max-w-5xl mx-auto px-6 py-20 text-center relative">
+        <div className="relative inline-block mb-8 animate-float">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full blur-2xl opacity-20"></div>
+          <img
+            src={profile.image}
+            alt={`${profile.name} - Profile Photo`}
+            className="relative w-40 h-40 rounded-full mx-auto object-cover border-4 border-blue-500 shadow-2xl shadow-blue-500/30"
+            onError={(e) => {
+              e.target.src = "https://ui-avatars.com/api/?name=Trin+Tantrakul&size=160&background=3b82f6&color=fff";
+            }}
+          />
+          <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-blue-500 to-cyan-400 text-white p-2 rounded-full shadow-lg">
+            <Sparkles className="w-5 h-5" />
+          </div>
+        </div>
+
+        <h2 className="text-5xl font-bold mb-3 bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">
+          {profile.name}
+        </h2>
+        <p className="text-xl text-gray-300 mb-8 font-medium">{profile.role}</p>
+        
+        <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed text-lg mb-8">
           I'm a student passionate about web development. I enjoy building 
-         user-friendly websites using HTML, CSS, JavaScript, Python, and React. 
-         Always learning and exploring new technologies to create better digital experiences.
+          user-friendly websites using HTML, CSS, JavaScript, Python, and React. 
+          Always learning and exploring new technologies to create better digital experiences.
         </p>
         
         {/* Social Links */}
-        <div className="flex justify-center gap-4 mt-6">
+        <div className="flex justify-center gap-4">
           <a 
             href={profile.github} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="p-2 border rounded-lg hover:bg-gray-800 hover:text-white transition"
+            className="group p-3 bg-slate-800/80 backdrop-blur-sm border-2 border-blue-500/30 rounded-xl hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1"
             aria-label="GitHub Profile"
           >
-            <Github className="w-5 h-5" />
+            <Github className="w-6 h-6 text-gray-300 group-hover:text-blue-400 transition-colors" />
           </a>
           <a 
             href={`mailto:${profile.email}`}
-            className="p-2 border rounded-lg hover:bg-blue-600 hover:text-white transition"
+            className="group p-3 bg-slate-800/80 backdrop-blur-sm border-2 border-blue-500/30 rounded-xl hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-1"
             aria-label="Send Email"
           >
-            <Mail className="w-5 h-5" />
+            <Mail className="w-6 h-6 text-gray-300 group-hover:text-cyan-400 transition-colors" />
           </a>
         </div>
       </section>
 
-      {/* Projects */}
-      <section id="projects" className="max-w-5xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold mb-8 text-center">Projects</h2>
+      {/* Projects Section */}
+      <section id="projects" className="max-w-6xl mx-auto px-6 py-20">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+            <Code2 className="w-4 h-4" />
+            My Work
+          </div>
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+            Featured Projects
+          </h2>
+          <p className="text-gray-400">Check out some of my recent work</p>
+        </div>
+
         <div className="grid gap-8 md:grid-cols-2">
           {projects.map((project, index) => (
             <article
               key={index}
-              className="bg-white border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="group bg-slate-800/50 backdrop-blur-sm border-2 border-blue-500/20 rounded-3xl overflow-hidden shadow-xl shadow-blue-500/5 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:-translate-y-2 hover:border-blue-400/40"
             >
-              <img 
-                src={project.image} 
-                alt={`${project.title} screenshot`}
-                className="w-full h-48 object-cover"
-                loading="lazy"
-              />
+              <div className="relative overflow-hidden">
+                <img 
+                  src={project.image} 
+                  alt={`${project.title} screenshot`}
+                  className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
+              </div>
+
               <div className="p-6">
-                <h3 className="font-bold text-xl mb-3 text-gray-800">{project.title}</h3>
-                <p className="text-gray-600 text-sm mb-5 leading-relaxed">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {project.tags.map((tag, i) => (
+                    <span 
+                      key={i}
+                      className="px-3 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-300 rounded-full text-xs font-semibold"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <h3 className="font-bold text-2xl mb-3 text-white group-hover:text-blue-400 transition-colors">
+                  {project.title}
+                </h3>
+                <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                  {project.description}
+                </p>
+
                 <div className="flex gap-4">
                   {project.link !== "#" && (
                     <a 
                       href={project.link} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-800 text-sm font-medium transition"
+                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg text-sm font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 hover:-translate-y-0.5"
                     >
                       <ExternalLink className="w-4 h-4" />
-                      Demo
+                      Live Demo
                     </a>
                   )}
                   <a 
                     href={project.code} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 text-sm font-medium transition"
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-800 border-2 border-blue-500/30 text-gray-300 rounded-lg text-sm font-medium hover:border-blue-400 hover:text-blue-400 transition-all duration-300"
                   >
                     <Github className="w-4 h-4" />
-                    Code
+                    View Code
                   </a>
                 </div>
               </div>
@@ -130,51 +226,149 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Skills */}
-      <section id="skills" className="max-w-4xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold mb-8 text-center">Skills</h2>
-        <div className="flex flex-wrap justify-center gap-3">
-          {skills.map((skill) => (
-            <span 
-              key={skill} 
-              className="px-4 py-2 bg-white border-2 border-gray-200 rounded-full text-sm font-medium hover:border-blue-500 hover:text-blue-600 transition-colors cursor-default"
-            >
-              {skill}
-            </span>
-          ))}
+      {/* Skills Section */}
+      <section id="skills" className="max-w-5xl mx-auto px-6 py-20">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+            <Palette className="w-4 h-4" />
+            What I Do
+          </div>
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+            Skills & Technologies
+          </h2>
+          <p className="text-gray-400">Technologies I work with</p>
+        </div>
+
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-3xl p-8 shadow-xl shadow-blue-500/5 border-2 border-blue-500/20">
+          <div className="grid gap-6 md:grid-cols-2">
+            {skills.map((skill, index) => (
+              <div 
+                key={skill.name}
+                className="group"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-semibold text-white group-hover:text-blue-400 transition-colors">
+                    {skill.name}
+                  </span>
+                  <span className="text-sm font-bold text-blue-400">
+                    {skill.level}%
+                  </span>
+                </div>
+                <div className="h-3 bg-slate-700/50 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-1000 ease-out shadow-lg shadow-blue-500/50"
+                    style={{ 
+                      width: `${skill.level}%`,
+                      animation: 'slideIn 1s ease-out forwards'
+                    }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Contact */}
-      <section id="contact" className="max-w-4xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold mb-6 text-center">Contact</h2>
-        <div className="bg-white rounded-2xl p-8 shadow-md text-center max-w-md mx-auto">
-          <p className="text-gray-700 mb-6">สนใจติดต่อหรือทำงานร่วมกัน ติดต่อได้ทาง:</p>
-          <div className="space-y-3">
-            <a 
-              href={`mailto:${profile.email}`} 
-              className="flex items-center justify-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition"
-            >
-              <Mail className="w-5 h-5" />
-              {profile.email}
-            </a>
-            <a 
-              href={profile.github} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 text-gray-700 hover:text-gray-900 font-medium transition"
-            >
-              <Github className="w-5 h-5" />
-              GitHub
-            </a>
+      {/* Contact Section */}
+      <section id="contact" className="max-w-4xl mx-auto px-6 py-20">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+            Let's Connect
+          </h2>
+          <p className="text-gray-400">Feel free to reach out for collaborations or just a chat</p>
+        </div>
+
+        <div className="bg-gradient-to-br from-blue-600 to-cyan-500 rounded-3xl p-1 shadow-2xl shadow-blue-500/30">
+          <div className="bg-slate-900 rounded-3xl p-8 text-center">
+            <p className="text-gray-300 mb-6 text-lg">สนใจติดต่อหรือทำงานร่วมกัน ติดต่อได้ทาง:</p>
+            <div className="space-y-4">
+              <a 
+                href={`mailto:${profile.email}`} 
+                className="flex items-center justify-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 hover:-translate-y-1"
+              >
+                <Mail className="w-5 h-5" />
+                {profile.email}
+              </a>
+              <a 
+                href={profile.github} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 px-6 py-3 bg-slate-800 border-2 border-blue-500/30 text-gray-300 rounded-xl font-medium hover:bg-slate-700 hover:border-blue-400 transition-all duration-300"
+              >
+                <Github className="w-5 h-5" />
+                Follow on GitHub
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-gray-600 text-sm border-t bg-white/50">
-        <p>© {new Date().getFullYear()} {profile.name}. Built with React & TailwindCSS</p>
+      <footer className="py-8 text-center text-gray-500 text-sm border-t border-blue-500/20 bg-slate-900/50 backdrop-blur-sm">
+        <p className="mb-2">© {new Date().getFullYear()} {profile.name}</p>
+        <p className="text-xs">Built with ❤️ using React & TailwindCSS</p>
       </footer>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 p-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-full shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/50 transition-all duration-300 hover:-translate-y-1 z-50"
+          aria-label="Scroll to top"
+        >
+          <ArrowUp className="w-6 h-6" />
+        </button>
+      )}
+
+      {/* Custom CSS Animations */}
+      <style>{`
+        @keyframes blob {
+          0%, 100% { 
+            transform: translate(0, 0) scale(1); 
+          }
+          25% { 
+            transform: translate(20px, -50px) scale(1.1); 
+          }
+          50% { 
+            transform: translate(-20px, 20px) scale(0.9); 
+          }
+          75% { 
+            transform: translate(50px, 50px) scale(1.05); 
+          }
+        }
+        
+        @keyframes float {
+          0%, 100% { 
+            transform: translateY(0); 
+          }
+          50% { 
+            transform: translateY(-20px); 
+          }
+        }
+
+        @keyframes slideIn {
+          from { 
+            width: 0; 
+          }
+        }
+
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
