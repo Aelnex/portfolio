@@ -16,7 +16,7 @@ const projects = [
     description: "เว็บไซต์ที่นำไปแข่งขัน พัฒนาด้วย HTML, CSS, Javascript และ React",
     link: "https://aelnex.github.io/pruning-ai/",
     code: "https://github.com/Aelnex/pruning-ai",
-    image: "https://media.discordapp.net/attachments/995243160861159474/1422605616915943455/image.png?ex=68dd4839&is=68dbf6b9&hm=1bbdf251d9614fd2ca7d13f145fa1cb2bd6fcf79604cb1053845ce4d74ba0f6c&=&format=webp&quality=lossless",
+    image: "image/taddo.png",
     tags: ["React", "JavaScript", "HTML/CSS"]
   },
   {
