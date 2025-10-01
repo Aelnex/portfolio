@@ -24,7 +24,7 @@ const projects = [
     description: "โครงงานวิเคราะห์ข้อมูลแบบสอบถามด้วย Python (Pandas, Matplotlib) และทำเว็บรายงานผล",
     link: "https://aelnex.github.io/myweather/",
     code: "https://github.com/Aelnex/myweather",
-    image: "https://i.imgur.com/1mX4YkD.png",
+    image: "https://i.imgur.com/eQAsEcX.png",
     tags: ["Python", "Data Analysis"]
   },
 ];
