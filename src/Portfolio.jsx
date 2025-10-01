@@ -7,7 +7,7 @@ const profile = {
   email: "manuiopface@gmail.com",
   github: "https://github.com/Aelnex",
   linkedin: "https://linkedin.com/in/trin-tantrakul",
-  image: "https://media.discordapp.net/attachments/995243160861159474/1422642686841585785/PUI_2698.jpg?ex=68dd6abf&is=68dc193f&hm=68b5dbebe3e7cc11915271e229e0e60f5fb7c1a2883319273533036598f51991&=&format=webp&width=640&height=960"
+  image: "https://i.imgur.com/CbXlLfl.jpeg"
 };
 
 const projects = [
@@ -16,7 +16,7 @@ const projects = [
     description: "เว็บไซต์ที่นำไปแข่งขัน พัฒนาด้วย HTML, CSS, Javascript และ React",
     link: "https://aelnex.github.io/pruning-ai/",
     code: "https://github.com/Aelnex/pruning-ai",
-    image: "image/taddo.png",
+    image: "https://i.imgur.com/bjMy7Y2.png",
     tags: ["React", "JavaScript", "HTML/CSS"]
   },
   {
@@ -24,7 +24,7 @@ const projects = [
     description: "โครงงานวิเคราะห์ข้อมูลแบบสอบถามด้วย Python (Pandas, Matplotlib) และทำเว็บรายงานผล",
     link: "https://aelnex.github.io/myweather/",
     code: "https://github.com/Aelnex/myweather",
-    image: "https://media.discordapp.net/attachments/995243160861159474/1422606130059939850/image.png?ex=68dd48b4&is=68dbf734&hm=ce45b92e3061c63173d0842b2c0f834c597974b04951b45d19719de80a9878e7&=&format=webp&quality=lossless",
+    image: "https://i.imgur.com/1mX4YkD.png",
     tags: ["Python", "Data Analysis"]
   },
 ];
