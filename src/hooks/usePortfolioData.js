@@ -148,7 +148,7 @@ export function usePortfolioData() {
       ...prev,
       [category]: {
         ...prev[category],
-        [subcategory]: [...prev[category][subcategory], { ...item, id: Date.now().toString() }]
+        [subcategory]: [...(prev[category][subcategory] || []), { ...item, id: Date.now().toString() }]
       }
     }));
   };
@@ -158,7 +158,7 @@ export function usePortfolioData() {
       ...prev,
       [category]: {
         ...prev[category],
-        [subcategory]: prev[category][subcategory].map(item =>
+        [subcategory]: (prev[category][subcategory] || []).map(item =>
           item.id === id ? { ...item, ...updatedItem } : item
         )
       }
@@ -170,7 +170,7 @@ export function usePortfolioData() {
       ...prev,
       [category]: {
         ...prev[category],
-        [subcategory]: prev[category][subcategory].filter(item => item.id !== id)
+        [subcategory]: (prev[category][subcategory] || []).filter(item => item.id !== id)
       }
     }));
   };

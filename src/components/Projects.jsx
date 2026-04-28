@@ -50,7 +50,7 @@ export default function Projects({ title, onUpdateTitle, projects, isEditMode, o
           layout
           className="items-container"
         >
-          <AnimatePresence mode='popLayout'>
+          <AnimatePresence mode='wait'>
             {activeItems.length === 0 && !isEditMode && (
               <motion.div 
                 initial={{ opacity: 0 }}

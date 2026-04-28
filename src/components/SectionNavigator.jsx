@@ -29,7 +29,7 @@ export default function SectionNavigator({ links, activeSection, onUpdateLink, i
         <motion.div 
           className="nav-progress-glow" 
           animate={{ 
-            height: `${(links.findIndex(s => getId(s.href) === activeSection) / (links.length - 1)) * 100}%` 
+            height: `${(Math.max(0, links.findIndex(s => getId(s.href) === activeSection)) / Math.max(1, links.length - 1)) * 100}%` 
           }}
           transition={{ type: 'spring', stiffness: 80, damping: 20 }}
         />
