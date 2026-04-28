@@ -181,9 +181,16 @@ export function usePortfolioData() {
 
   const exportPortfolioData = () => {
     const dataStr = JSON.stringify(portfolioData, null, 4);
-    console.log("%c--- EXPORTED DATA ---", "color: #00d4ff; font-weight: bold; font-size: 16px;");
-    console.log(dataStr);
-    alert("Data exported to Console! Press F12 to copy the JSON and paste it into your defaultData.js file.");
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'portfolio-data.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    alert("Data exported! Please send the downloaded 'portfolio-data.json' file to me.");
   };
 
   return {

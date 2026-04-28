@@ -118,7 +118,7 @@ export default function Hero({ profile, isEditMode, toggleEditMode, updateProfil
           </button>
           {isEditMode && (
             <button className="export-data-btn" onClick={onExport} title="Download data for deployment">
-              > export_project_data
+              &gt; export_project_data
             </button>
           )}
         </div>

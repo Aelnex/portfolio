@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🚀 Starting Automated Deployment..."
+echo "🚀 Starting Final Deployment with Your Data..."
 echo "-----------------------------------"
 read -p "Enter your GitHub Repo URL (e.g., https://github.com/user/repo.git): " REPO_URL
 
@@ -19,23 +19,20 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "💾 Saving changes..."
+echo "💾 Saving your actual data to GitHub..."
 git add .
-git commit -m "Final portfolio build for evaluation"
+git commit -m "Update portfolio with actual user data"
 
-echo "⬆️ Pushing to GitHub (you may be asked for your credentials)..."
+echo "⬆️ Pushing to GitHub..."
 git push -u origin main --force
 
 if [ $? -eq 0 ]; then
     echo "-----------------------------------"
-    echo "✅ SUCCESS! Your code is now on GitHub."
+    echo "✅ SUCCESS! Your REAL portfolio is now on GitHub."
     echo "🔗 Repo: $REPO_URL"
     echo ""
-    echo "Final Step:"
-    echo "1. Go to https://vercel.com"
-    echo "2. Log in and click 'Add New' > 'Project'"
-    echo "3. Select this repository and click 'Deploy'"
-    echo "4. Send the Vercel link to your teacher!"
+    echo "Now Vercel will automatically update your site (wait about 1 minute)."
+    echo "You can then send the Vercel link to your teacher!"
 else
     echo "❌ Push failed. Make sure your GitHub URL is correct and you have permission."
 fi
