@@ -1,0 +1,98 @@
+import React, { useState, useEffect } from 'react';
+
+export default function EditModal({ isOpen, onClose, onSave, itemContext }) {
+  const [formData, setFormData] = useState({
+    title: '',
+    role: '',
+    description: '',
+    learnings: '',
+    imageUrl: ''
+  });
+
+  useEffect(() => {
+    if (itemContext && itemContext.item) {
+      setFormData({
+        title: itemContext.item.title || '',
+        role: itemContext.item.role || '',
+        description: itemContext.item.description || '',
+        learnings: itemContext.item.learnings || '',
+        imageUrl: itemContext.item.imageUrl || ''
+      });
+    } else {
+      setFormData({
+        title: '',
+        role: '',
+        description: '',
+        learnings: '',
+        imageUrl: ''
+      });
+    }
+  }, [itemContext, isOpen]);
+
+  if (!isOpen || !itemContext) return null;
+
+  const { category } = itemContext;
+  
+  let labels = {
+    title: 'Title / Project Name',
+    role: 'Role / Position',
+    description: 'Description',
+    learnings: 'Skills (comma separated)',
+    imageUrl: 'Image URL (optional)'
+  };
+
+  if (category === 'selfdev') { 
+    labels.title = 'Course / Event'; 
+    labels.role = 'Provider'; 
+  } else if (category === 'awards') { 
+    labels.title = 'Award Name'; 
+    labels.role = 'Organizer'; 
+  } else if (category === 'leadership') { 
+    labels.title = 'Activity'; 
+    labels.role = 'Role'; 
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  return (
+    <div id="edit-modal" className="modal">
+      <div className="modal-content">
+        <span className="close-modal" onClick={onClose}>&times;</span>
+        <h2 id="modal-title">{itemContext.item ? '// edit_item' : '// new_item'}</h2>
+        <form id="edit-form" onSubmit={handleSubmit}>
+          <div id="form-fields">
+            <div className="form-group">
+              <label>{labels.title}</label>
+              <input type="text" name="title" value={formData.title} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>{labels.role}</label>
+              <input type="text" name="role" value={formData.role} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>{labels.description}</label>
+              <textarea name="description" rows="3" value={formData.description} onChange={handleChange}></textarea>
+            </div>
+            <div className="form-group">
+              <label>{labels.learnings}</label>
+              <input type="text" name="learnings" value={formData.learnings} onChange={handleChange} placeholder="React, Node.js, etc." />
+            </div>
+            <div className="form-group">
+              <label>{labels.imageUrl}</label>
+              <input type="url" name="imageUrl" value={formData.imageUrl} onChange={handleChange} placeholder="https://..." />
+            </div>
+          </div>
+          <button type="submit" className="btn neon-btn">Save</button>
+        </form>
+      </div>
+    </div>
+  );
+}
