@@ -112,16 +112,6 @@ export default function Hero({ profile, isEditMode, toggleEditMode, updateProfil
       variants={containerVariants}
     >
       <div className="hero-content">
-        <div className="controls" style={{ display: 'flex', gap: '10px' }}>
-          <button className="edit-toggle-btn" onClick={toggleEditMode}>
-            {isEditMode ? '> disable_edit_mode' : '> enable_edit_mode'}
-          </button>
-          {isEditMode && (
-            <button className="export-data-btn" onClick={onExport} title="Download data for deployment">
-              &gt; export_project_data
-            </button>
-          )}
-        </div>
 
         {/* Profile Image with Hologram HUD and Parallax Sway */}
         <motion.div 
