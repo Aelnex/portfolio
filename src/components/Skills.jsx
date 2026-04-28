@@ -36,16 +36,31 @@ export default function Skills({
     }
   };
 
-  // Helper to get Bento class and icon
-  const getBentoInfo = (index) => {
+  // Helper to get Bento class and icon dynamically based on content
+  const getBentoInfo = (category, index) => {
     const infos = [
-      { class: 'large', icon: '🚀', desc: 'Core development stack and frameworks I use every day.' },
-      { class: 'wide', icon: '🎨', desc: 'Design systems and UI/UX styling tools.' },
-      { class: 'tall', icon: '⚡', desc: 'Performance and optimization tools.' },
-      { class: 'small', icon: '🛠️', desc: 'Additional libraries.' },
-      { class: 'small', icon: '📦', desc: 'State management.' }
+      { icon: '🚀', desc: 'Core development stack and frameworks I use every day.' },
+      { icon: '🎨', desc: 'Design systems and UI/UX styling tools.' },
+      { icon: '⚡', desc: 'Performance and optimization tools.' },
+      { icon: '🛠️', desc: 'Additional libraries.' },
+      { icon: '📦', desc: 'State management.' }
     ];
-    return infos[index] || { class: 'small', icon: '🔹', desc: 'Technical skill set.' };
+    
+    const baseInfo = infos[index] || { icon: '🔹', desc: 'Technical skill set.' };
+    
+    // Dynamic sizing based on number of skills
+    const itemsCount = category.items ? category.items.length : 0;
+    let bentoClass = 'small';
+    
+    if (itemsCount >= 6) {
+      bentoClass = 'large';
+    } else if (itemsCount >= 4) {
+      bentoClass = index % 2 === 0 ? 'wide' : 'tall';
+    } else {
+      bentoClass = 'small';
+    }
+
+    return { ...baseInfo, class: bentoClass };
   };
 
   return (
@@ -78,7 +93,7 @@ export default function Skills({
 
       <div className="bento-grid">
         {skillCategories.map((category, catIdx) => {
-          const info = getBentoInfo(catIdx);
+          const info = getBentoInfo(category, catIdx);
           return (
             <BentoItem 
               key={catIdx}
