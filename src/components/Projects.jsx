@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TiltCard from './TiltCard';
+import MagneticButton from './MagneticButton';
 
 export default function Projects({ title, onUpdateTitle, projects, isEditMode, onEdit, onDelete, onAdd }) {
   const categories = Object.keys(projects);
@@ -36,13 +37,14 @@ export default function Projects({ title, onUpdateTitle, projects, isEditMode, o
 
         <div className="tabs">
           {categories.map(cat => (
-            <button 
-              key={cat} 
-              className={`tab-btn ${activeTab === cat ? 'active' : ''}`}
-              onClick={() => setActiveTab(cat)}
-            >
-              {cat.toUpperCase()}
-            </button>
+            <MagneticButton key={cat} strength={0.2}>
+              <button 
+                className={`tab-btn ${activeTab === cat ? 'active' : ''}`}
+                onClick={() => setActiveTab(cat)}
+              >
+                {cat.toUpperCase()}
+              </button>
+            </MagneticButton>
           ))}
         </div>
 

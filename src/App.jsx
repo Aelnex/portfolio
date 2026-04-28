@@ -15,6 +15,7 @@ import FocusReveal from './components/FocusReveal';
 import FloatingElements from './components/FloatingElements';
 import BackgroundEffects from './components/BackgroundEffects';
 import SectionNavigator from './components/SectionNavigator';
+import GooeyCursor from './components/GooeyCursor';
 import { usePortfolioData } from './hooks/usePortfolioData';
 
 export default function App() {
@@ -42,59 +43,6 @@ export default function App() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editContext, setEditContext] = useState(null);
-
-  // --- Advanced Cursor Logic ---
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-  const springConfig = { damping: 25, stiffness: 250, mass: 0.5 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-
-  const [cursorVariant, setCursorVariant] = useState("default");
-
-  useEffect(() => {
-    const moveCursor = (e) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-    };
-
-    const onMouseOver = (e) => {
-      if (e.target.closest('a, button, .editable, .card, .tab-btn, input, textarea')) {
-        setCursorVariant("hover");
-      }
-    };
-
-    const onMouseOut = (e) => {
-      if (e.target.closest('a, button, .editable, .card, .tab-btn, input, textarea')) {
-        setCursorVariant("default");
-      }
-    };
-
-    window.addEventListener("mousemove", moveCursor);
-    document.addEventListener("mouseover", onMouseOver);
-    document.addEventListener("mouseout", onMouseOut);
-
-    return () => {
-      window.removeEventListener("mousemove", moveCursor);
-      document.removeEventListener("mouseover", onMouseOver);
-      document.removeEventListener("mouseout", onMouseOut);
-    };
-  }, [cursorX, cursorY]);
-
-  const variants = {
-    default: {
-      width: 36,
-      height: 36,
-      backgroundColor: "rgba(0, 212, 255, 0)",
-      border: "1.5px solid rgba(0, 212, 255, 0.4)"
-    },
-    hover: {
-      width: 60,
-      height: 60,
-      backgroundColor: "rgba(124, 58, 237, 0.1)",
-      border: "1.5px solid rgba(124, 58, 237, 0.5)"
-    }
-  };
 
   useEffect(() => {
     document.body.classList.toggle('edit-mode', isEditMode);
@@ -161,26 +109,7 @@ export default function App() {
 
   return (
     <ReactLenis root>
-      <motion.div
-        className="cursor-dot"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-      />
-      <motion.div
-        className="cursor-outline"
-        variants={variants}
-        animate={cursorVariant}
-        style={{
-          x: cursorXSpring,
-          y: cursorYSpring,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-      />
+      <GooeyCursor isEditMode={isEditMode} />
       <ReadingProgressBar />
       <FloatingElements />
       <BackgroundEffects />

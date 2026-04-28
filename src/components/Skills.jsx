@@ -61,6 +61,21 @@ export default function Skills({
         <div className="section-line"></div>
       </div>
 
+      <div className="infinite-tech-loop-container">
+        <div className="infinite-tech-loop-track">
+          {/* We render the list twice to create a seamless loop */}
+          {[1, 2].map((loopIdx) => (
+            <div key={loopIdx} className="infinite-tech-loop-content">
+              {skillCategories.flatMap(cat => cat.items || []).map((skill, idx) => (
+                <span key={`${loopIdx}-${skill.id || idx}`} className="tech-loop-item">
+                  {skill.name}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="bento-grid">
         {skillCategories.map((category, catIdx) => {
           const info = getBentoInfo(catIdx);

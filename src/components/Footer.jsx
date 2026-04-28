@@ -1,4 +1,5 @@
 import React from 'react';
+import MagneticButton from './MagneticButton';
 
 export default function Footer({ data, isEditMode, onUpdateLogo }) {
   const currentYear = new Date().getFullYear();
@@ -21,7 +22,9 @@ export default function Footer({ data, isEditMode, onUpdateLogo }) {
         <p>&copy; <span>{currentYear}</span>. Built with React & ❤️</p>
         <div className="footer-links">
           {data.links.map((link, idx) => (
-            <a key={idx} href={link.href}>{link.name}</a>
+            <MagneticButton key={idx} strength={0.2}>
+              <a href={link.href}>{link.name}</a>
+            </MagneticButton>
           ))}
         </div>
       </div>

@@ -1144,3 +1144,75 @@ body.edit-mode .card-actions { opacity: 1; }
     padding: 2.5rem;
     backdrop-filter: blur(10px);
 }
+
+/* --- Gooey Cursor --- */
+.gooey-cursor-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.gooey-dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    background-color: var(--blue, #00d4ff);
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+/* --- Infinite Tech Loop --- */
+.infinite-tech-loop-container {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+    padding: 1rem 0;
+    margin: 2rem 0;
+    /* Fade edges */
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.infinite-tech-loop-track {
+    display: inline-flex;
+    /* Slower scrolling since there are many items */
+    animation: scroll-left 40s linear infinite;
+}
+
+.infinite-tech-loop-content {
+    display: inline-flex;
+    gap: 2rem;
+    padding-right: 2rem; /* Matches gap to ensure seamless loop */
+}
+
+.tech-loop-item {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem 1.5rem;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.tech-loop-item:hover {
+    color: var(--blue);
+    background: rgba(0, 212, 255, 0.05);
+    border-color: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+    transform: scale(1.05);
+}
+
+@keyframes scroll-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
