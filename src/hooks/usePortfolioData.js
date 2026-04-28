@@ -6,7 +6,27 @@ export function usePortfolioData() {
     const saved = localStorage.getItem('portfolioData');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        return {
+          ...defaultPortfolioData,
+          ...parsed,
+          profile: { ...defaultPortfolioData.profile, ...parsed.profile },
+          navbar: { ...defaultPortfolioData.navbar, ...parsed.navbar },
+          footer: { ...defaultPortfolioData.footer, ...parsed.footer },
+          sectionTitles: { ...defaultPortfolioData.sectionTitles, ...parsed.sectionTitles },
+          professional: { ...defaultPortfolioData.professional, ...parsed.professional },
+          selfdev: { ...defaultPortfolioData.selfdev, ...parsed.selfdev },
+          awards: { ...defaultPortfolioData.awards, ...parsed.awards },
+          leadership: { ...defaultPortfolioData.leadership, ...parsed.leadership },
+          skills: parsed.skills || defaultPortfolioData.skills,
+          contact: parsed.contact || defaultPortfolioData.contact || {
+            facebook: '',
+            github: '',
+            phone: '',
+            email: '',
+            linkedin: ''
+          }
+        };
       } catch (e) {
         return defaultPortfolioData;
       }
@@ -23,13 +43,106 @@ export function usePortfolioData() {
   const updateProfile = (field, value) => {
     setPortfolioData(prev => ({
       ...prev,
-      profile: {
-        ...prev.profile,
-        [field]: value
-      }
+      profile: { ...prev.profile, [field]: value }
     }));
   };
 
+  const updateContact = (field, value) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      contact: { ...prev.contact, [field]: value }
+    }));
+  };
+
+  const updateSectionTitle = (section, title) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      sectionTitles: { ...prev.sectionTitles, [section]: title }
+    }));
+  };
+
+  const updateFooterLogo = (logo) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      footer: { ...prev.footer, logo }
+    }));
+  };
+
+  const updateNavbarLogo = (logo) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      navbar: { ...prev.navbar, logo }
+    }));
+  };
+
+  const updateNavbarLink = (idx, name) => {
+    setPortfolioData(prev => {
+      const newLinks = [...prev.navbar.links];
+      newLinks[idx] = { ...newLinks[idx], name };
+      return { ...prev, navbar: { ...prev.navbar, links: newLinks } };
+    });
+  };
+
+  // --- Skills Management ---
+  const updateSkill = (categoryIdx, skillId, field, value) => {
+    setPortfolioData(prev => {
+      const newSkills = [...prev.skills];
+      newSkills[categoryIdx] = {
+        ...newSkills[categoryIdx],
+        items: newSkills[categoryIdx].items.map(item =>
+          item.id === skillId ? { ...item, [field]: value } : item
+        )
+      };
+      return { ...prev, skills: newSkills };
+    });
+  };
+
+  const addSkill = (categoryIdx) => {
+    setPortfolioData(prev => {
+      const newSkills = [...prev.skills];
+      const newItem = { id: Date.now().toString(), name: "New Skill", level: "80%" };
+      newSkills[categoryIdx] = {
+        ...newSkills[categoryIdx],
+        items: [...newSkills[categoryIdx].items, newItem]
+      };
+      return { ...prev, skills: newSkills };
+    });
+  };
+
+  const deleteSkill = (categoryIdx, skillId) => {
+    setPortfolioData(prev => {
+      const newSkills = [...prev.skills];
+      newSkills[categoryIdx] = {
+        ...newSkills[categoryIdx],
+        items: newSkills[categoryIdx].items.filter(item => item.id !== skillId)
+      };
+      return { ...prev, skills: newSkills };
+    });
+  };
+
+  const updateSkillCategory = (categoryIdx, title) => {
+    setPortfolioData(prev => {
+      const newSkills = [...prev.skills];
+      newSkills[categoryIdx] = { ...newSkills[categoryIdx], title };
+      return { ...prev, skills: newSkills };
+    });
+  };
+
+  const addSkillCategory = () => {
+    setPortfolioData(prev => ({
+      ...prev,
+      skills: [...prev.skills, { title: "New Category", items: [] }]
+    }));
+  };
+
+  const deleteSkillCategory = (categoryIdx) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      skills: prev.skills.filter((_, i) => i !== categoryIdx)
+    }));
+  };
+
+  // --- Item Management (Projects, Awards, etc.) ---
   const addItem = (category, subcategory, item) => {
     setPortfolioData(prev => ({
       ...prev,
@@ -66,13 +179,32 @@ export function usePortfolioData() {
     setIsEditMode(prev => !prev);
   };
 
+  const exportPortfolioData = () => {
+    const dataStr = JSON.stringify(portfolioData, null, 4);
+    console.log("%c--- EXPORTED DATA ---", "color: #00d4ff; font-weight: bold; font-size: 16px;");
+    console.log(dataStr);
+    alert("Data exported to Console! Press F12 to copy the JSON and paste it into your defaultData.js file.");
+  };
+
   return {
     portfolioData,
     isEditMode,
     toggleEditMode,
     updateProfile,
+    updateContact,
+    updateSectionTitle,
+    updateNavbarLogo,
+    updateNavbarLink,
+    updateFooterLogo,
+    updateSkill,
+    addSkill,
+    deleteSkill,
+    updateSkillCategory,
+    addSkillCategory,
+    deleteSkillCategory,
     addItem,
     updateItem,
-    deleteItem
+    deleteItem,
+    exportPortfolioData
   };
 }

@@ -6,7 +6,8 @@ export default function EditModal({ isOpen, onClose, onSave, itemContext }) {
     role: '',
     description: '',
     learnings: '',
-    imageUrl: ''
+    imageUrl: '',
+    link: ''
   });
 
   useEffect(() => {
@@ -16,7 +17,8 @@ export default function EditModal({ isOpen, onClose, onSave, itemContext }) {
         role: itemContext.item.role || '',
         description: itemContext.item.description || '',
         learnings: itemContext.item.learnings || '',
-        imageUrl: itemContext.item.imageUrl || ''
+        imageUrl: itemContext.item.imageUrl || '',
+        link: itemContext.item.link || ''
       });
     } else {
       setFormData({
@@ -24,7 +26,8 @@ export default function EditModal({ isOpen, onClose, onSave, itemContext }) {
         role: '',
         description: '',
         learnings: '',
-        imageUrl: ''
+        imageUrl: '',
+        link: ''
       });
     }
   }, [itemContext, isOpen]);
@@ -38,7 +41,8 @@ export default function EditModal({ isOpen, onClose, onSave, itemContext }) {
     role: 'Role / Position',
     description: 'Description',
     learnings: 'Skills (comma separated)',
-    imageUrl: 'Image URL (optional)'
+    imageUrl: 'Image URL or Upload',
+    link: 'External Link / URL'
   };
 
   if (category === 'selfdev') { 
@@ -55,6 +59,17 @@ export default function EditModal({ isOpen, onClose, onSave, itemContext }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, imageUrl: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -87,7 +102,25 @@ export default function EditModal({ isOpen, onClose, onSave, itemContext }) {
             </div>
             <div className="form-group">
               <label>{labels.imageUrl}</label>
-              <input type="url" name="imageUrl" value={formData.imageUrl} onChange={handleChange} placeholder="https://..." />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <input 
+                  type="text" 
+                  name="imageUrl" 
+                  value={formData.imageUrl} 
+                  onChange={handleChange} 
+                  placeholder="https://... or select file below" 
+                />
+                <input 
+                  type="file" 
+                  onChange={handleFileChange} 
+                  accept="image/*"
+                  style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>{labels.link}</label>
+              <input type="url" name="link" value={formData.link} onChange={handleChange} placeholder="https://..." />
             </div>
           </div>
           <button type="submit" className="btn neon-btn">Save</button>

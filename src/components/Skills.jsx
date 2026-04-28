@@ -1,95 +1,180 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-export default function Skills() {
-  const terminalRef = useRef(null);
+export default function Skills({ 
+  title, 
+  onUpdateTitle, 
+  skillCategories = [], 
+  isEditMode, 
+  onUpdateSkill, 
+  onAddSkill,
+  onDeleteSkill,
+  onUpdateCategory, 
+  onAddCategory,
+  onDeleteCategory
+}) {
+  
+  const handleEditSectionTitle = () => {
+    if (!isEditMode) return;
+    const newTitle = prompt("Enter new section title:", title);
+    if (newTitle !== null) onUpdateTitle(newTitle);
+  };
 
-  useEffect(() => {
-    if (!terminalRef.current) return;
-    const terminal = terminalRef.current;
-    
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const fills = terminal.querySelectorAll('.skill-fill');
-          fills.forEach((fill, i) => {
-            setTimeout(() => {
-              fill.style.width = fill.dataset.level + '%';
-            }, i * 150);
-          });
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 });
-    
-    obs.observe(terminal);
-    return () => obs.disconnect();
-  }, []);
+  const handleEditSkill = (catIdx, skillId, currentVal) => {
+    if (!isEditMode) return;
+    const newVal = prompt("Edit skill name:", currentVal);
+    if (newVal !== null && newVal.trim() !== '') {
+      onUpdateSkill(catIdx, skillId, 'name', newVal.trim());
+    }
+  };
 
-  const frontendSkills = [
-    { name: 'HTML / CSS', level: 90 },
-    { name: 'JavaScript', level: 85 },
-    { name: 'React / Next.js', level: 80 },
-    { name: 'Vue.js', level: 70 },
-  ];
+  const handleEditCategory = (catIdx, currentTitle) => {
+    if (!isEditMode) return;
+    const newTitle = prompt("Enter new category title:", currentTitle);
+    if (newTitle !== null && newTitle.trim() !== '') {
+      onUpdateCategory(catIdx, newTitle.trim());
+    }
+  };
 
-  const backendSkills = [
-    { name: 'Node.js', level: 75 },
-    { name: 'Python', level: 70 },
-    { name: 'SQL / NoSQL', level: 75 },
-  ];
-
-  const toolsSkills = [
-    { name: 'Git / GitHub', level: 85 },
-    { name: 'Docker', level: 60 },
-    { name: 'Figma / UI Design', level: 75 },
-  ];
-
-  let delayCounter = 0;
-
-  const renderSkillRow = (skill) => {
-    const delay = delayCounter++;
-    return (
-      <div key={skill.name} className="skill-row reveal-item" data-delay={delay}>
-        <span className="skill-prompt">&gt;</span>
-        <span className="skill-name">{skill.name}</span>
-        <div className="skill-bar"><div className="skill-fill" data-level={skill.level}></div></div>
-        <span className="skill-percent">{skill.level}%</span>
-      </div>
-    );
+  // Helper to get Bento class and icon
+  const getBentoInfo = (index) => {
+    const infos = [
+      { class: 'large', icon: '🚀', desc: 'Core development stack and frameworks I use every day.' },
+      { class: 'wide', icon: '🎨', desc: 'Design systems and UI/UX styling tools.' },
+      { class: 'tall', icon: '⚡', desc: 'Performance and optimization tools.' },
+      { class: 'small', icon: '🛠️', desc: 'Additional libraries.' },
+      { class: 'small', icon: '📦', desc: 'State management.' }
+    ];
+    return infos[index] || { class: 'small', icon: '🔹', desc: 'Technical skill set.' };
   };
 
   return (
-    <section id="skills" className="category-section reveal-section">
+    <section id="skills" className="category-section">
       <div className="section-header">
         <span className="section-number">02</span>
-        <h2>// Skills</h2>
+        <h2 
+          className={isEditMode ? 'editable' : ''} 
+          onClick={handleEditSectionTitle}
+        >
+          {title}
+        </h2>
         <div className="section-line"></div>
       </div>
-      <div className="terminal-window">
-        <div className="terminal-header">
-          <div className="terminal-dots">
-            <span className="dot red"></span>
-            <span className="dot yellow"></span>
-            <span className="dot green"></span>
-          </div>
-          <span className="terminal-title">skills.sh — ~/portfolio</span>
-        </div>
-        <div className="terminal-body" id="skills-terminal" ref={terminalRef}>
-          <div className="terminal-line comment">// Frontend Technologies</div>
-          {frontendSkills.map(renderSkillRow)}
-          
-          <div className="terminal-line comment">// Backend Technologies</div>
-          {backendSkills.map(renderSkillRow)}
-          
-          <div className="terminal-line comment">// Tools & Others</div>
-          {toolsSkills.map(renderSkillRow)}
-          
-          <div className="terminal-line blink-line">
-            <span className="skill-prompt">&gt;</span>
-            <span className="terminal-cursor-block">_</span>
-          </div>
-        </div>
+
+      <div className="bento-grid">
+        {skillCategories.map((category, catIdx) => {
+          const info = getBentoInfo(catIdx);
+          return (
+            <BentoItem 
+              key={catIdx}
+              className={`bento-item ${info.class}`}
+              category={category}
+              catIdx={catIdx}
+              info={info}
+              isEditMode={isEditMode}
+              handleEditCategory={handleEditCategory}
+              handleEditSkill={handleEditSkill}
+              onAddSkill={() => onAddSkill(catIdx)}
+              onDeleteSkill={onDeleteSkill}
+              onDeleteCategory={() => onDeleteCategory(catIdx)}
+            />
+          );
+        })}
+        {isEditMode && (
+          <motion.div 
+            className="bento-item add-category-card"
+            whileHover={{ scale: 1.02 }}
+            onClick={onAddCategory}
+            style={{ cursor: 'pointer', border: '2px dashed var(--blue)', justifyContent: 'center', alignItems: 'center', background: 'rgba(0,212,255,0.05)' }}
+          >
+            <span style={{ fontSize: '2rem', color: 'var(--blue)' }}>+ Add Category</span>
+          </motion.div>
+        )}
       </div>
     </section>
+  );
+}
+
+function BentoItem({ className, category, catIdx, info, isEditMode, handleEditCategory, handleEditSkill, onAddSkill, onDeleteSkill, onDeleteCategory }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 });
+  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 });
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <motion.div 
+      className={className}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: catIdx * 0.1 }}
+      onMouseMove={handleMouseMove}
+      style={{
+        "--x": `${springX}px`,
+        "--y": `${springY}px`,
+      }}
+    >
+      <div className="glow-bg" />
+      
+      {isEditMode && (
+        <button 
+          className="delete-category-btn"
+          onClick={(e) => { e.stopPropagation(); onDeleteCategory(); }}
+          style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(255,0,0,0.2)', border: 'none', color: '#ff4d4d', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer', zIndex: 10 }}
+        >
+          ×
+        </button>
+      )}
+
+      <div className="bento-content">
+        <span className="bento-icon">{info.icon}</span>
+        <h3 
+          className={`bento-title ${isEditMode ? 'editable' : ''}`}
+          onClick={() => handleEditCategory(catIdx, category.title)}
+        >
+          {category.title}
+        </h3>
+        <p className="bento-desc">{info.desc}</p>
+        
+        <div className="skill-tags-container" style={{ marginTop: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {(category.items || []).map((skill, idx) => (
+            <div key={skill.id || idx} style={{ position: 'relative' }}>
+              <motion.span 
+                className={`skill-chip ${isEditMode ? 'editable' : ''}`}
+                whileHover={{ scale: 1.1, backgroundColor: 'rgba(0, 212, 255, 0.2)', borderColor: 'var(--blue)' }}
+                onClick={() => handleEditSkill(catIdx, skill.id, skill.name)}
+                style={{ fontSize: '0.85rem', padding: '4px 12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '100px', cursor: 'pointer', display: 'inline-block' }}
+              >
+                {skill.name}
+              </motion.span>
+              {isEditMode && (
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onDeleteSkill(catIdx, skill.id); }}
+                  style={{ position: 'absolute', top: '-5px', right: '-5px', width: '16px', height: '16px', borderRadius: '50%', background: '#ff4d4d', border: 'none', color: 'white', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 5 }}
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          ))}
+          {isEditMode && (
+            <motion.button 
+              className="add-skill-chip"
+              onClick={onAddSkill}
+              whileHover={{ scale: 1.1 }}
+              style={{ fontSize: '0.85rem', padding: '4px 12px', border: '1px dashed var(--blue)', borderRadius: '100px', background: 'transparent', color: 'var(--blue)', cursor: 'pointer' }}
+            >
+              + Add Skill
+            </motion.button>
+          )}
+        </div>
+      </div>
+    </motion.div>
   );
 }
