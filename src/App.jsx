@@ -22,6 +22,7 @@ export default function App() {
   const {
     portfolioData,
     isEditMode,
+    toggleEditMode,
     addItem,
     updateItem,
     deleteItem,
@@ -146,6 +147,62 @@ export default function App() {
         onSave={handleSaveModal}
         itemContext={editContext}
       />
+
+      {/* Floating Admin Controls */}
+      <div className="admin-controls" style={{ position: 'fixed', bottom: '2rem', left: '2rem', zIndex: 10000, display: 'flex', gap: '1rem' }}>
+        <motion.button
+          className={`admin-btn ${isEditMode ? 'active' : ''}`}
+          onClick={toggleEditMode}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          style={{
+            padding: '12px 20px',
+            borderRadius: '100px',
+            background: isEditMode ? 'var(--blue)' : 'rgba(255,255,255,0.05)',
+            border: '1px solid var(--blue)',
+            color: isEditMode ? '#000' : 'var(--blue)',
+            cursor: 'pointer',
+            fontWeight: '600',
+            boxShadow: isEditMode ? '0 0 20px var(--blue)' : 'none',
+            backdropFilter: 'blur(10px)',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          {isEditMode ? '🚀 Exit Edit Mode' : '✎ Enable Edit Mode'}
+        </motion.button>
+
+        {isEditMode && (
+          <motion.button
+            className="admin-btn export-btn"
+            onClick={() => {
+              const dataStr = JSON.stringify(portfolioData, null, 4);
+              const blob = new Blob([dataStr], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = 'portfolio-data.json';
+              link.click();
+              alert("Data exported! Save this file to backup your changes.");
+            }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              padding: '12px 20px',
+              borderRadius: '100px',
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid #fff',
+              color: '#fff',
+              cursor: 'pointer',
+              fontWeight: '600',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            📥 Export JSON
+          </motion.button>
+        )}
+      </div>
     </ReactLenis>
   );
 }
