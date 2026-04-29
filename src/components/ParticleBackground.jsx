@@ -8,8 +8,9 @@ export default function ParticleBackground() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let w, h, particles = [];
-    const PARTICLE_COUNT = 60;
-    const MAX_DIST = 120;
+    const isMobile = window.innerWidth < 768;
+    const PARTICLE_COUNT = isMobile ? 30 : 60;
+    const MAX_DIST = isMobile ? 80 : 120;
     let animationFrameId;
 
     function resize() {

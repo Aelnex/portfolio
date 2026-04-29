@@ -1,7 +1,10 @@
 import React from 'react';
 import MagneticButton from './MagneticButton';
+import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function Footer({ data, isEditMode, onUpdateLogo }) {
+export default function Footer() {
+  const { portfolioData, isEditMode, updateFooterLogo: onUpdateLogo } = usePortfolioContext();
+  const data = portfolioData.footer;
   const currentYear = new Date().getFullYear();
 
   const handleEditLogo = () => {

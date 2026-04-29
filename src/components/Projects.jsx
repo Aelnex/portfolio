@@ -2,15 +2,20 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TiltCard from './TiltCard';
 import MagneticButton from './MagneticButton';
+import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function Projects({ title, onUpdateTitle, projects, isEditMode, onEdit, onDelete, onAdd }) {
+export default function Projects({ onEdit, onDelete, onAdd }) {
+  const { portfolioData, isEditMode, updateSectionTitle } = usePortfolioContext();
+  const title = portfolioData.sectionTitles.projects;
+  const projects = portfolioData.professional;
+
   const categories = Object.keys(projects);
   const [activeTab, setActiveTab] = useState(categories[0] || '');
 
   const handleEditTitle = () => {
     if (!isEditMode) return;
     const newTitle = prompt("Enter new section title:", title);
-    if (newTitle !== null) onUpdateTitle(newTitle);
+    if (newTitle !== null) updateSectionTitle('projects', newTitle);
   };
 
   const activeItems = projects[activeTab] || [];

@@ -1,18 +1,18 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TiltCard from './TiltCard';
+import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function About({ 
-  titles,
-  onUpdateTitle,
-  selfdev, 
-  awards, 
-  leadership, 
-  isEditMode, 
-  onEdit, 
-  onDelete, 
-  onAdd 
-}) {
+export default function About({ onEdit, onDelete, onAdd }) {
+  const { portfolioData, isEditMode, updateSectionTitle: onUpdateTitle } = usePortfolioContext();
+  const selfdev = portfolioData.selfdev;
+  const awards = portfolioData.awards;
+  const leadership = portfolioData.leadership;
+  const titles = {
+    selfDev: portfolioData.sectionTitles.aboutSelfDev,
+    awards: portfolioData.sectionTitles.aboutAwards,
+    leadership: portfolioData.sectionTitles.aboutLeadership
+  };
   return (
     <div id="about" className="perspective-container">
       <SubCategorySection

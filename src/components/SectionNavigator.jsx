@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function SectionNavigator({ links, activeSection, onUpdateLink, isEditMode }) {
+export default function SectionNavigator({ links, activeSection }) {
+  const { isEditMode, updateNavbarLink } = usePortfolioContext();
   
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
@@ -15,7 +17,7 @@ export default function SectionNavigator({ links, activeSection, onUpdateLink, i
     if (!isEditMode) return;
     const newName = prompt("Enter new navigation label:", currentName);
     if (newName !== null && newName.trim() !== '') {
-      onUpdateLink(index, newName.trim());
+      updateNavbarLink(index, newName.trim());
     }
   };
 

@@ -16,30 +16,16 @@ import FloatingElements from './components/FloatingElements';
 import BackgroundEffects from './components/BackgroundEffects';
 import SectionNavigator from './components/SectionNavigator';
 import GooeyCursor from './components/GooeyCursor';
-import { usePortfolioData } from './hooks/usePortfolioData';
+import { usePortfolioContext } from './context/PortfolioContext';
 
 export default function App() {
   const {
     portfolioData,
     isEditMode,
-    toggleEditMode,
-    updateProfile,
-    updateContact,
-    updateSectionTitle,
-    updateNavbarLogo,
-    updateNavbarLink,
-    updateFooterLogo,
-    updateSkill,
-    addSkill,
-    deleteSkill,
-    updateSkillCategory,
-    addSkillCategory,
-    deleteSkillCategory,
     addItem,
     updateItem,
     deleteItem,
-    exportPortfolioData
-  } = usePortfolioData();
+  } = usePortfolioContext();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editContext, setEditContext] = useState(null);
@@ -116,8 +102,6 @@ export default function App() {
       <SectionNavigator 
         links={portfolioData.navbar.links}
         activeSection={activeSection}
-        onUpdateLink={updateNavbarLink}
-        isEditMode={isEditMode}
       />
 
       <motion.div style={{ y: bgY, filter: bgFilter, opacity: bgOpacity }} className="parallax-bg-wrapper">
@@ -125,81 +109,35 @@ export default function App() {
       </motion.div>
       <motion.div className="grid-overlay" style={{ opacity: gridOpacity }} />
 
-      <Navbar 
-        data={portfolioData.navbar}
-        isEditMode={isEditMode}
-        onUpdateLogo={updateNavbarLogo}
-        onUpdateLink={updateNavbarLink}
-      />
+      <Navbar />
 
       <div id="app-container">
-        <Hero 
-          profile={portfolioData.profile} 
-          isEditMode={isEditMode} 
-          toggleEditMode={toggleEditMode} 
-          updateProfile={updateProfile} 
-          onExport={exportPortfolioData}
-        />
+        <Hero />
         
         <main>
           <FocusReveal delay={0}>
             <Projects 
-              title={portfolioData.sectionTitles.projects}
-              onUpdateTitle={(val) => updateSectionTitle('projects', val)}
-              projects={portfolioData.professional} 
-              isEditMode={isEditMode} 
               onEdit={handleEditItem}
               onDelete={handleDeleteItem}
               onAdd={handleAddItem}
             />
           </FocusReveal>
           <FocusReveal delay={0.1}>
-            <Skills 
-              title={portfolioData.sectionTitles.skills}
-              onUpdateTitle={(val) => updateSectionTitle('skills', val)}
-              skillCategories={portfolioData.skills} 
-              isEditMode={isEditMode}
-              onUpdateSkill={updateSkill}
-              onAddSkill={addSkill}
-              onDeleteSkill={deleteSkill}
-              onUpdateCategory={updateSkillCategory}
-              onAddCategory={addSkillCategory}
-              onDeleteCategory={deleteSkillCategory}
-            />
+            <Skills />
           </FocusReveal>
           <FocusReveal delay={0.1}>
             <About 
-              titles={{
-                selfDev: portfolioData.sectionTitles.aboutSelfDev,
-                awards: portfolioData.sectionTitles.aboutAwards,
-                leadership: portfolioData.sectionTitles.aboutLeadership
-              }}
-              onUpdateTitle={updateSectionTitle}
-              selfdev={portfolioData.selfdev} 
-              awards={portfolioData.awards} 
-              leadership={portfolioData.leadership} 
-              isEditMode={isEditMode} 
               onEdit={handleEditItem}
               onDelete={handleDeleteItem}
               onAdd={handleAddItem}
             />
           </FocusReveal>
           <FocusReveal delay={0.1}>
-            <Contact 
-              title={portfolioData.sectionTitles.contact}
-              onUpdateTitle={(val) => updateSectionTitle('contact', val)}
-              contactData={portfolioData.contact}
-              onUpdateContact={updateContact}
-              isEditMode={isEditMode}
-            />
+            <Contact />
           </FocusReveal>
         </main>
         
-        <Footer 
-          data={portfolioData.footer}
-          isEditMode={isEditMode}
-          onUpdateLogo={updateFooterLogo}
-        />
+        <Footer />
       </div>
 
       <EditModal 

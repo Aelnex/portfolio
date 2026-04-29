@@ -2,8 +2,12 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import TiltCard from './TiltCard';
+import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function Contact({ title, onUpdateTitle, contactData = {}, onUpdateContact, isEditMode }) {
+export default function Contact() {
+  const { portfolioData, isEditMode, updateSectionTitle: onUpdateTitle, updateContact: onUpdateContact } = usePortfolioContext();
+  const title = portfolioData.sectionTitles.contact;
+  const contactData = portfolioData.contact || {};
   const formRef = useRef();
   const [isSending, setIsSending] = useState(false);
   const [status, setStatus] = useState(''); // '', 'success', 'error'

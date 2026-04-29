@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import MagneticButton from './MagneticButton';
+import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function Navbar({ data, isEditMode, onUpdateLogo, onUpdateLink }) {
+export default function Navbar() {
+  const { portfolioData, isEditMode, updateNavbarLogo, updateNavbarLink } = usePortfolioContext();
+  const data = portfolioData.navbar;
+
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -17,14 +21,14 @@ export default function Navbar({ data, isEditMode, onUpdateLogo, onUpdateLink })
     if (!isEditMode) return;
     e.preventDefault();
     const newLogo = prompt("Enter new logo text:", data.logo);
-    if (newLogo !== null) onUpdateLogo(newLogo);
+    if (newLogo !== null) updateNavbarLogo(newLogo);
   };
 
   const handleEditLink = (e, idx, currentName) => {
     if (!isEditMode) return;
     e.preventDefault();
     const newName = prompt("Enter new link name:", currentName);
-    if (newName !== null) onUpdateLink(idx, newName);
+    if (newName !== null) updateNavbarLink(idx, newName);
   };
 
   return (

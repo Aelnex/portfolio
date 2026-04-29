@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-const NUM_TRAILS = 15;
-
 export default function GooeyCursor({ isEditMode }) {
   const [cursorVariant, setCursorVariant] = useState("default");
 
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  // We create an array of springs with decreasing stiffness for the trailing effect
-  const trails = Array.from({ length: NUM_TRAILS }).map((_, i) => {
-    // The main cursor is faster, the trailing ones are slower
-    const stiffness = 800 - i * 120;
-    const damping = 35 + i * 5;
-    const mass = 0.5 + i * 0.1;
-    
-    return {
-      x: useSpring(mouseX, { stiffness: Math.max(100, stiffness), damping, mass }),
-      y: useSpring(mouseY, { stiffness: Math.max(100, stiffness), damping, mass }),
-    };
-  });
+  // Springs for the main dot (fast, follows closely)
+  const dotX = useSpring(mouseX, { stiffness: 1000, damping: 40, mass: 0.1 });
+  const dotY = useSpring(mouseY, { stiffness: 1000, damping: 40, mass: 0.1 });
+
+  // Springs for the ring (smooth, slightly delayed)
+  const ringX = useSpring(mouseX, { stiffness: 200, damping: 25, mass: 0.5 });
+  const ringY = useSpring(mouseY, { stiffness: 200, damping: 25, mass: 0.5 });
 
   useEffect(() => {
     const moveCursor = (e) => {
@@ -51,55 +44,80 @@ export default function GooeyCursor({ isEditMode }) {
     };
   }, [mouseX, mouseY]);
 
-  if (isEditMode) return null; // Hide custom cursor in edit mode to avoid interfering with inputs
+  if (isEditMode) return null; // Hide custom cursor in edit mode
 
   return (
     <>
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
-        <defs>
-          <filter id="gooey">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  
-                      0 1 0 0 0  
-                      0 0 1 0 0  
-                      0 0 0 25 -10"
-              result="gooey"
-            />
-            <feComposite in="SourceGraphic" in2="gooey" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
-      <div className="gooey-cursor-container" style={{ filter: 'url(#gooey)' }}>
-        {trails.map((springs, index) => {
-          // Main cursor is larger and slightly different color/opacity
-          const isMain = index === 0;
-          const size = isMain ? (cursorVariant === "hover" ? 40 : 25) : Math.max(5, 18 - index * 1.2);
-          
-          return (
-            <motion.div
-              key={index}
-              className="gooey-dot"
-              style={{
-                x: springs.x,
-                y: springs.y,
-                width: size,
-                height: size,
-                translateX: '-50%',
-                translateY: '-50%',
-                opacity: Math.max(0.1, 1 - index * 0.08)
-              }}
-              animate={{
-                width: size,
-                height: size,
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            />
-          );
-        })}
-      </div>
+      {/* Soft Ambient Glow */}
+      <motion.div
+        style={{
+          x: ringX,
+          y: ringY,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          translateX: '-50%',
+          translateY: '-50%',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          zIndex: 9997,
+        }}
+        animate={{
+          width: cursorVariant === "hover" ? 120 : 60,
+          height: cursorVariant === "hover" ? 120 : 60,
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      />
+
+      {/* Outer Ring */}
+      <motion.div
+        style={{
+          x: ringX,
+          y: ringY,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          translateX: '-50%',
+          translateY: '-50%',
+          borderRadius: '50%',
+          border: '1.5px solid rgba(0, 212, 255, 0.6)',
+          boxShadow: '0 0 15px rgba(0, 212, 255, 0.3)',
+          pointerEvents: 'none',
+          zIndex: 9998,
+        }}
+        animate={{
+          width: cursorVariant === "hover" ? 50 : 36,
+          height: cursorVariant === "hover" ? 50 : 36,
+          backgroundColor: cursorVariant === "hover" ? 'rgba(0, 212, 255, 0.1)' : 'transparent',
+          borderColor: cursorVariant === "hover" ? 'rgba(0, 212, 255, 1)' : 'rgba(0, 212, 255, 0.6)'
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      />
+
+      {/* Inner Dot */}
+      <motion.div
+        style={{
+          x: dotX,
+          y: dotY,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          translateX: '-50%',
+          translateY: '-50%',
+          borderRadius: '50%',
+          backgroundColor: '#00d4ff',
+          boxShadow: '0 0 10px #00d4ff, 0 0 20px #00d4ff',
+          pointerEvents: 'none',
+          zIndex: 9999,
+        }}
+        animate={{
+          width: cursorVariant === "hover" ? 0 : 6,
+          height: cursorVariant === "hover" ? 0 : 6,
+          opacity: cursorVariant === "hover" ? 0 : 1
+        }}
+        transition={{ duration: 0.15 }}
+      />
     </>
   );
 }

@@ -1,18 +1,22 @@
 import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function Skills({ 
-  title, 
-  onUpdateTitle, 
-  skillCategories = [], 
-  isEditMode, 
-  onUpdateSkill, 
-  onAddSkill,
-  onDeleteSkill,
-  onUpdateCategory, 
-  onAddCategory,
-  onDeleteCategory
-}) {
+export default function Skills() {
+  const {
+    portfolioData,
+    isEditMode,
+    updateSectionTitle: onUpdateTitle,
+    updateSkill: onUpdateSkill,
+    addSkill: onAddSkill,
+    deleteSkill: onDeleteSkill,
+    updateSkillCategory: onUpdateCategory,
+    addSkillCategory: onAddCategory,
+    deleteSkillCategory: onDeleteCategory
+  } = usePortfolioContext();
+
+  const title = portfolioData.sectionTitles.skills;
+  const skillCategories = portfolioData.skills;
   
   const handleEditSectionTitle = () => {
     if (!isEditMode) return;

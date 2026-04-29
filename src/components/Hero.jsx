@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import MagneticButton from './MagneticButton';
+import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function Hero({ profile, isEditMode, toggleEditMode, updateProfile, onExport }) {
+export default function Hero() {
+  const { portfolioData, isEditMode, toggleEditMode, updateProfile, exportPortfolioData: onExport } = usePortfolioContext();
+  const profile = portfolioData.profile;
+
   const [typingText, setTypingText] = useState('');
   const fileInputRef = useRef(null);
 
