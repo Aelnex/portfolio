@@ -58,6 +58,7 @@ export const defaultPortfolioData = {
         "name": "Trin Tantrakul",
         "title": "Eat, sleep, code, repeat",
         "image": "/assets/images/img_1777464420347_0.jpeg",
+        "facultyImage": "/assets/images/faculty_placeholder.jpg",
         "bio": "A passionate professional ready to showcase skills and achievements. Welcome to my portfolio!"
     },
     "professional": {

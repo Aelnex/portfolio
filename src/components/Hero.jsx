@@ -8,6 +8,8 @@ export default function Hero() {
   const profile = portfolioData.profile;
 
   const [typingText, setTypingText] = useState('');
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [editingField, setEditingField] = useState('image'); // 'image' or 'facultyImage'
   const fileInputRef = useRef(null);
 
   // --- 3D Tilt Logic ---
@@ -72,8 +74,9 @@ export default function Hero() {
     }
   };
 
-  const handleImageClick = () => {
+  const handleImageClick = (field) => {
     if (isEditMode) {
+      setEditingField(field);
       fileInputRef.current.click();
     }
   };
@@ -83,7 +86,7 @@ export default function Hero() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        updateProfile('image', reader.result);
+        updateProfile(editingField, reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -117,7 +120,7 @@ export default function Hero() {
     >
       <div className="hero-content">
 
-        {/* Profile Image with Hologram HUD and Parallax Sway */}
+        {/* Profile Image with Hologram HUD and Coin-Flip Logic */}
         <motion.div 
           className="profile-img-container" 
           variants={itemVariants}
@@ -128,7 +131,11 @@ export default function Hero() {
             transformStyle: "preserve-3d" 
           }}
           onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          onMouseLeave={() => {
+            handleMouseLeave();
+            setIsFlipped(false);
+          }}
+          onMouseEnter={() => setIsFlipped(true)}
           whileHover={{ scale: 1.05 }}
           animate={{
             y: [0, -12, 0],
@@ -144,9 +151,8 @@ export default function Hero() {
           {/* Scanning Line */}
           <div className="scan-line"></div>
 
-          {/* Hologram HUD Background - Multi-layered Parallax Sway */}
+          {/* Hologram HUD Background */}
           <div className="hologram-hud">
-            {/* Outer Slow Sway Ring */}
             <motion.div 
               className="hud-ring"
               animate={{ x: [-12, 12, -12], rotate: [0, 360] }}
@@ -156,7 +162,6 @@ export default function Hero() {
               }}
               style={{ opacity: 0.15, border: '1px dashed var(--blue)', inset: '-25px' }}
             />
-            {/* Inner Fast Counter-Sway Ring */}
             <motion.div 
               className="hud-ring-tech"
               animate={{ x: [8, -8, 8], rotate: [0, -360] }}
@@ -166,9 +171,6 @@ export default function Hero() {
               }}
               style={{ inset: '-15px', borderTop: '2px solid var(--blue)', opacity: 0.4 }}
             />
-            
-            <div className="tech-dot" style={{ top: '5%', left: '20%' }}></div>
-            <div className="tech-dot" style={{ bottom: '15%', right: '10%', animationDelay: '1s' }}></div>
           </div>
 
           <input
@@ -179,26 +181,47 @@ export default function Hero() {
             accept="image/*"
           />
           
-          <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', borderRadius: '50%' }}>
-            <motion.img
-              src={profile.image || "https://via.placeholder.com/150/0a0a0f/00d4ff?text=Photo"}
-              alt="Profile Picture"
-              className={isEditMode ? 'editable-img editable' : 'editable-img'}
-              onClick={handleImageClick}
-              title={isEditMode ? "Click to change image" : ""}
-              initial={{ scale: 0.5, rotate: -15, opacity: 0 }}
-              animate={{ scale: 1, rotate: 0, opacity: 1 }}
-              transition={{ duration: 1.2, ease: [0.2, 0.65, 0.3, 0.9], delay: 0.4 }}
-              style={{ filter: 'contrast(1.1) brightness(1.1)' }}
-            />
-            {/* Hologram Flicker Overlay */}
-            <motion.div 
-              className="hologram-overlay"
-              animate={{ opacity: [0, 0.1, 0] }}
-              transition={{ duration: 0.1, repeat: Infinity, repeatDelay: 5 }}
-              style={{ position: 'absolute', inset: 0, background: 'var(--blue)', pointerEvents: 'none' }}
-            />
-          </div>
+          <motion.div 
+            className="flip-card-inner"
+            animate={{ rotateY: isFlipped ? 180 : 0 }}
+            transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+            style={{ position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d' }}
+          >
+            {/* Front Side (Profile Picture) */}
+            <div className="flip-card-front" style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', borderRadius: '50%', overflow: 'hidden' }}>
+              <motion.img
+                src={profile.image || "https://via.placeholder.com/150/0a0a0f/00d4ff?text=Photo"}
+                alt="Profile Picture"
+                className={isEditMode ? 'editable-img editable' : 'editable-img'}
+                onClick={() => handleImageClick('image')}
+                title={isEditMode ? "Click to change profile image" : ""}
+                initial={{ scale: 0.5, rotate: -15, opacity: 0 }}
+                animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                transition={{ duration: 1.2, ease: [0.2, 0.65, 0.3, 0.9], delay: 0.4 }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'contrast(1.1) brightness(1.1)' }}
+              />
+            </div>
+
+            {/* Back Side (Faculty Picture) */}
+            <div className="flip-card-back" style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', borderRadius: '50%', overflow: 'hidden', transform: 'rotateY(180deg)' }}>
+              <img
+                src={profile.facultyImage || "https://via.placeholder.com/150/0a0a0f/00d4ff?text=Faculty"}
+                alt="Faculty"
+                className={isEditMode ? 'editable-img editable' : 'editable-img'}
+                onClick={() => handleImageClick('facultyImage')}
+                title={isEditMode ? "Click to change faculty image" : ""}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'contrast(1.1) brightness(1.1)' }}
+              />
+            </div>
+          </motion.div>
+
+          {/* Hologram Flicker Overlay */}
+          <motion.div 
+            className="hologram-overlay"
+            animate={{ opacity: [0, 0.1, 0] }}
+            transition={{ duration: 0.1, repeat: Infinity, repeatDelay: 5 }}
+            style={{ position: 'absolute', inset: 0, background: 'var(--blue)', pointerEvents: 'none', borderRadius: '50%', zIndex: 5 }}
+          />
 
           <div className="profile-ring"></div>
           <div className="profile-ring-outer"></div>
