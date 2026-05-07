@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 import { usePortfolioContext } from '../context/PortfolioContext';
 
 export default function Skills() {
@@ -21,7 +21,7 @@ export default function Skills() {
   const handleEditSectionTitle = () => {
     if (!isEditMode) return;
     const newTitle = prompt("Enter new section title:", title);
-    if (newTitle !== null) onUpdateTitle(newTitle);
+    if (newTitle !== null) onUpdateTitle('skills', newTitle);
   };
 
   const handleEditSkill = (catIdx, skillId, currentVal) => {
@@ -134,6 +134,8 @@ function BentoItem({ className, category, catIdx, info, isEditMode, handleEditCa
   const mouseY = useMotionValue(0);
   const springX = useSpring(mouseX, { stiffness: 300, damping: 30 });
   const springY = useSpring(mouseY, { stiffness: 300, damping: 30 });
+  const xPx = useMotionTemplate`${springX}px`;
+  const yPx = useMotionTemplate`${springY}px`;
 
   function handleMouseMove({ currentTarget, clientX, clientY }) {
     const { left, top } = currentTarget.getBoundingClientRect();
@@ -150,8 +152,8 @@ function BentoItem({ className, category, catIdx, info, isEditMode, handleEditCa
       transition={{ duration: 0.6, delay: catIdx * 0.1 }}
       onMouseMove={handleMouseMove}
       style={{
-        "--x": `${springX}px`,
-        "--y": `${springY}px`,
+        "--x": xPx,
+        "--y": yPx,
       }}
     >
       <div className="glow-bg" />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ReactLenis } from '@studio-freight/react-lenis';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';

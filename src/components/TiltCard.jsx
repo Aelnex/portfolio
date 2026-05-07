@@ -53,6 +53,10 @@ export default function TiltCard({ children, className = '', tiltStrength = 15, 
       {glareEnabled && (
         <motion.div
           className="tilt-glare"
+          variants={{
+            hover: { opacity: 1 }
+          }}
+          initial={{ opacity: 0 }}
           style={{
             position: 'absolute',
             top: 0,
@@ -64,7 +68,6 @@ export default function TiltCard({ children, className = '', tiltStrength = 15, 
             background: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), transparent 60%)`,
             backgroundPositionX: glareX,
             backgroundPositionY: glareY,
-            opacity: 0,
             transition: 'opacity 0.3s',
           }}
         />

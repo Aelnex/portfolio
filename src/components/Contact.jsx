@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
 import TiltCard from './TiltCard';
 import { usePortfolioContext } from '../context/PortfolioContext';
 
@@ -15,7 +14,7 @@ export default function Contact() {
   const handleEditTitle = () => {
     if (!isEditMode) return;
     const newTitle = prompt("Enter new section title:", title);
-    if (newTitle !== null) onUpdateTitle(newTitle);
+    if (newTitle !== null) onUpdateTitle('contact', newTitle);
   };
 
   const handleEditContact = (field, currentVal) => {
