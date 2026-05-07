@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-export default function GooeyCursor({ isEditMode }) {
+export default function GooeyCursor() {
   const [cursorVariant, setCursorVariant] = useState("default");
 
   const mouseX = useMotionValue(-100);
@@ -22,13 +22,13 @@ export default function GooeyCursor({ isEditMode }) {
     };
 
     const onMouseOver = (e) => {
-      if (e.target.closest('a, button, .editable, .card, .tab-btn, input, textarea')) {
+      if (e.target.closest('a, button, .card, .tab-btn, input, textarea')) {
         setCursorVariant("hover");
       }
     };
 
     const onMouseOut = (e) => {
-      if (e.target.closest('a, button, .editable, .card, .tab-btn, input, textarea')) {
+      if (e.target.closest('a, button, .card, .tab-btn, input, textarea')) {
         setCursorVariant("default");
       }
     };
@@ -43,8 +43,6 @@ export default function GooeyCursor({ isEditMode }) {
       document.removeEventListener("mouseout", onMouseOut);
     };
   }, [mouseX, mouseY]);
-
-  if (isEditMode) return null; // Hide custom cursor in edit mode
 
   return (
     <>

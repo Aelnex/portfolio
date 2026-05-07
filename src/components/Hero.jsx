@@ -4,13 +4,11 @@ import MagneticButton from './MagneticButton';
 import { usePortfolioContext } from '../context/PortfolioContext';
 
 export default function Hero() {
-  const { portfolioData, isEditMode, toggleEditMode, updateProfile, exportPortfolioData: onExport } = usePortfolioContext();
+  const { portfolioData } = usePortfolioContext();
   const profile = portfolioData.profile;
 
   const [typingText, setTypingText] = useState('');
   const [isFlipped, setIsFlipped] = useState(false);
-  const [editingField, setEditingField] = useState('image'); // 'image' or 'facultyImage'
-  const fileInputRef = useRef(null);
 
   // --- 3D Tilt Logic ---
   const rotateX = useMotionValue(0);
@@ -65,32 +63,6 @@ export default function Hero() {
     type();
     return () => clearTimeout(timer);
   }, []);
-
-  const handleEdit = (field, currentVal) => {
-    if (!isEditMode) return;
-    const newVal = prompt(`Enter new ${field}:`, currentVal);
-    if (newVal !== null) {
-      updateProfile(field, newVal);
-    }
-  };
-
-  const handleImageClick = (field) => {
-    if (isEditMode) {
-      setEditingField(field);
-      fileInputRef.current.click();
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        updateProfile(editingField, reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -173,14 +145,6 @@ export default function Hero() {
             />
           </div>
 
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-            accept="image/*"
-          />
-          
           <motion.div 
             className="flip-card-inner"
             animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -192,9 +156,7 @@ export default function Hero() {
               <motion.img
                 src={profile.image || "https://via.placeholder.com/150/0a0a0f/00d4ff?text=Photo"}
                 alt="Profile Picture"
-                className={isEditMode ? 'editable-img editable' : 'editable-img'}
-                onClick={() => handleImageClick('image')}
-                title={isEditMode ? "Click to change profile image" : ""}
+                className="editable-img"
                 initial={{ scale: 0.5, rotate: -15, opacity: 0 }}
                 animate={{ scale: 1, rotate: 0, opacity: 1 }}
                 transition={{ duration: 1.2, ease: [0.2, 0.65, 0.3, 0.9], delay: 0.4 }}
@@ -207,9 +169,7 @@ export default function Hero() {
               <img
                 src={profile.facultyImage || "https://via.placeholder.com/150/0a0a0f/00d4ff?text=Faculty"}
                 alt="Faculty"
-                className={isEditMode ? 'editable-img editable' : 'editable-img'}
-                onClick={() => handleImageClick('facultyImage')}
-                title={isEditMode ? "Click to change faculty image" : ""}
+                className="editable-img"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'contrast(1.1) brightness(1.1)' }}
               />
             </div>
@@ -229,8 +189,6 @@ export default function Hero() {
         </motion.div>
 
         <motion.h1
-          className={isEditMode ? 'editable' : ''}
-          onClick={() => handleEdit('name', profile.name)}
           style={{ overflow: 'hidden', display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}
         >
           {profile.name.split('').map((char, index) => (
@@ -245,8 +203,7 @@ export default function Hero() {
         </motion.h1>
 
         <motion.h3 
-          className={isEditMode ? 'hero-title editable' : 'hero-title'}
-          onClick={() => handleEdit('title', profile.title)}
+          className="hero-title"
           variants={itemVariants}
         >
           {profile.title}
@@ -259,8 +216,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.p
-          className={isEditMode ? 'hero-bio editable' : 'hero-bio'}
-          onClick={() => handleEdit('bio', profile.bio)}
+          className="hero-bio"
           variants={itemVariants}
         >
           {profile.bio}

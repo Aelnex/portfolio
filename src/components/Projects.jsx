@@ -4,19 +4,13 @@ import TiltCard from './TiltCard';
 import MagneticButton from './MagneticButton';
 import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function Projects({ onEdit, onDelete, onAdd }) {
-  const { portfolioData, isEditMode, updateSectionTitle } = usePortfolioContext();
+export default function Projects() {
+  const { portfolioData } = usePortfolioContext();
   const title = portfolioData.sectionTitles.projects;
   const projects = portfolioData.professional;
 
   const categories = Object.keys(projects);
   const [activeTab, setActiveTab] = useState(categories[0] || '');
-
-  const handleEditTitle = () => {
-    if (!isEditMode) return;
-    const newTitle = prompt("Enter new section title:", title);
-    if (newTitle !== null) updateSectionTitle('projects', newTitle);
-  };
 
   const activeItems = projects[activeTab] || [];
 
@@ -31,10 +25,7 @@ export default function Projects({ onEdit, onDelete, onAdd }) {
       >
         <div className="section-header">
           <span className="section-number">01</span>
-          <h2 
-            className={isEditMode ? 'editable' : ''} 
-            onClick={handleEditTitle}
-          >
+          <h2>
             {title}
           </h2>
           <div className="section-line"></div>
@@ -58,7 +49,7 @@ export default function Projects({ onEdit, onDelete, onAdd }) {
           className="items-container"
         >
           <AnimatePresence mode='wait'>
-            {activeItems.length === 0 && !isEditMode && (
+            {activeItems.length === 0 && (
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -73,28 +64,17 @@ export default function Projects({ onEdit, onDelete, onAdd }) {
                 key={item.id} 
                 item={item} 
                 index={idx}
-                isEditMode={isEditMode}
-                onEdit={() => onEdit('professional', activeTab, item)}
-                onDelete={() => onDelete('professional', activeTab, item.id)}
               />
             ))}
           </AnimatePresence>
         </motion.div>
 
-        {isEditMode && (
-          <button 
-            className="btn add-item-btn"
-            onClick={() => onAdd('professional', activeTab)}
-          >
-            + Add New Project to {activeTab}
-          </button>
-        )}
       </motion.div>
     </section>
   );
 }
 
-function ProjectCard({ item, index, isEditMode, onEdit, onDelete }) {
+function ProjectCard({ item, index }) {
   const CardWrapper = item.link ? 'a' : 'div';
   const wrapperProps = item.link ? { href: item.link, target: "_blank", rel: "noopener noreferrer" } : {};
 
@@ -166,13 +146,6 @@ function ProjectCard({ item, index, isEditMode, onEdit, onDelete }) {
             ))}
           </div>
         </CardWrapper>
-
-        {isEditMode && (
-          <div className="card-actions">
-            <button className="action-btn edit-item" title="Edit" onClick={(e) => { e.preventDefault(); onEdit(); }}>✎</button>
-            <button className="action-btn delete delete-item" title="Delete" onClick={(e) => { e.preventDefault(); onDelete(); }}>×</button>
-          </div>
-        )}
       </motion.div>
     </TiltCard>
   );

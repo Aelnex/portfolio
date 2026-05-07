@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import TiltCard from './TiltCard';
 import { usePortfolioContext } from '../context/PortfolioContext';
 
-export default function About({ onEdit, onDelete, onAdd }) {
-  const { portfolioData, isEditMode, updateSectionTitle: onUpdateTitle } = usePortfolioContext();
+export default function About() {
+  const { portfolioData } = usePortfolioContext();
   const selfdev = portfolioData.selfdev;
   const awards = portfolioData.awards;
   const leadership = portfolioData.leadership;
@@ -19,47 +19,32 @@ export default function About({ onEdit, onDelete, onAdd }) {
         id="self-development"
         number="03"
         title={titles.selfDev}
-        onUpdateTitle={(val) => onUpdateTitle('aboutSelfDev', val)}
         categories={[
           { key: 'certifications', label: 'Certifications & Courses' },
           { key: 'workshops', label: 'Workshops & Seminars' }
         ]}
         data={selfdev}
         mainCategory="selfdev"
-        isEditMode={isEditMode}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        onAdd={onAdd}
       />
 
       <TimelineSection 
         id="awards"
         number="04"
         title={titles.awards}
-        onUpdateTitle={(val) => onUpdateTitle('aboutAwards', val)}
         data={awards} 
         mainCategory="awards"
         cat={ { key: 'competitions', label: 'Competitions' } }
-        isEditMode={isEditMode}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        onAdd={onAdd}
       />
 
       <SubCategorySection
         id="leadership"
         number="05"
         title={titles.leadership}
-        onUpdateTitle={(val) => onUpdateTitle('aboutLeadership', val)}
         categories={[
           { key: 'activities', label: 'Leadership & Volunteering' }
         ]}
         data={leadership}
         mainCategory="leadership"
-        isEditMode={isEditMode}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        onAdd={onAdd}
       />
     </div>
   );
@@ -85,12 +70,7 @@ function ScrollRevealText({ text }) {
   );
 }
 
-function SubCategorySection({ id, number, title, onUpdateTitle, categories, data, mainCategory, isEditMode, onEdit, onDelete, onAdd }) {
-  const handleEditTitle = () => {
-    if (!isEditMode) return;
-    const newTitle = prompt("Enter new section title:", title);
-    if (newTitle !== null) onUpdateTitle(newTitle);
-  };
+function SubCategorySection({ id, number, title, categories, data, mainCategory }) {
 
   return (
     <motion.section 
@@ -103,10 +83,7 @@ function SubCategorySection({ id, number, title, onUpdateTitle, categories, data
     >
       <div className="section-header">
         <span className="section-number">{number}</span>
-        <h2 
-          className={isEditMode ? 'editable' : ''} 
-          onClick={handleEditTitle}
-        >
+        <h2>
           {title}
         </h2>
         <div className="section-line"></div>
@@ -123,20 +100,9 @@ function SubCategorySection({ id, number, title, onUpdateTitle, categories, data
                   key={item.id} 
                   item={item} 
                   index={idx}
-                  isEditMode={isEditMode}
-                  onEdit={() => onEdit(mainCategory, cat.key, item)}
-                  onDelete={() => onDelete(mainCategory, cat.key, item.id)}
                 />
               ))}
             </div>
-            {isEditMode && (
-              <button 
-                className="btn add-item-btn"
-                onClick={() => onAdd(mainCategory, cat.key)}
-              >
-                + Add New to {cat.label}
-              </button>
-            )}
           </div>
         );
       })}
@@ -144,14 +110,8 @@ function SubCategorySection({ id, number, title, onUpdateTitle, categories, data
   );
 }
 
-function TimelineSection({ id, number, title, onUpdateTitle, data, mainCategory, cat, isEditMode, onEdit, onDelete, onAdd }) {
+function TimelineSection({ id, number, title, data, mainCategory, cat }) {
   const items = data[cat.key] || [];
-  
-  const handleEditTitle = () => {
-    if (!isEditMode) return;
-    const newTitle = prompt("Enter new section title:", title);
-    if (newTitle !== null) onUpdateTitle(newTitle);
-  };
 
   return (
     <motion.section 
@@ -164,10 +124,7 @@ function TimelineSection({ id, number, title, onUpdateTitle, data, mainCategory,
     >
       <div className="section-header">
         <span className="section-number">{number}</span>
-        <h2 
-          className={isEditMode ? 'editable' : ''} 
-          onClick={handleEditTitle}
-        >
+        <h2>
           {title}
         </h2>
         <div className="section-line"></div>
@@ -183,28 +140,17 @@ function TimelineSection({ id, number, title, onUpdateTitle, data, mainCategory,
                 key={item.id} 
                 item={item} 
                 idx={idx} 
-                isEditMode={isEditMode}
-                onEdit={() => onEdit(mainCategory, cat.key, item)}
-                onDelete={() => onDelete(mainCategory, cat.key, item.id)}
               />
             ))}
           </AnimatePresence>
         </div>
       </div>
       
-      {isEditMode && (
-        <button 
-          className="btn add-item-btn"
-          onClick={() => onAdd(mainCategory, cat.key)}
-        >
-          + Add New to {cat.label}
-        </button>
-      )}
     </motion.section>
   );
 }
 
-function TimelineItem({ item, idx, isEditMode, onEdit, onDelete }) {
+function TimelineItem({ item, idx }) {
   const CardWrapper = item.link ? 'a' : 'div';
   const wrapperProps = item.link ? { href: item.link, target: "_blank", rel: "noopener noreferrer" } : {};
 
@@ -225,19 +171,13 @@ function TimelineItem({ item, idx, isEditMode, onEdit, onDelete }) {
           </h4>
           <div className="role">{item.role}</div>
           <p>{item.description}</p>
-          {isEditMode && (
-            <div className="card-actions">
-              <button className="action-btn edit-item" onClick={(e) => { e.preventDefault(); onEdit(); }}>✎</button>
-              <button className="action-btn delete delete-item" onClick={(e) => { e.preventDefault(); onDelete(); }}>×</button>
-            </div>
-          )}
         </CardWrapper>
       </motion.div>
     </TiltCard>
   );
 }
 
-function AboutCard({ item, index, isEditMode, onEdit, onDelete }) {
+function AboutCard({ item, index }) {
   const CardWrapper = item.link ? 'a' : 'div';
   const wrapperProps = item.link ? { href: item.link, target: "_blank", rel: "noopener noreferrer" } : {};
 
@@ -267,12 +207,6 @@ function AboutCard({ item, index, isEditMode, onEdit, onDelete }) {
           <p style={{ opacity: 0.6, fontSize: '0.95rem' }}>{item.description}</p>
         </CardWrapper>
 
-        {isEditMode && (
-          <div className="card-actions">
-            <button className="action-btn edit-item" onClick={(e) => { e.stopPropagation(); onEdit(); }}>✎</button>
-            <button className="action-btn delete delete-item" onClick={(e) => { e.stopPropagation(); onDelete(); }}>×</button>
-          </div>
-        )}
       </motion.div>
     </TiltCard>
   );

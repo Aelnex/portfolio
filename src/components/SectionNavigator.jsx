@@ -1,23 +1,10 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePortfolioContext } from '../context/PortfolioContext';
-
 export default function SectionNavigator({ links, activeSection }) {
-  const { isEditMode, updateNavbarLink } = usePortfolioContext();
-  
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleEditLabel = (e, index, currentName) => {
-    e.stopPropagation(); // Prevent scroll when clicking to edit
-    if (!isEditMode) return;
-    const newName = prompt("Enter new navigation label:", currentName);
-    if (newName !== null && newName.trim() !== '') {
-      updateNavbarLink(index, newName.trim());
     }
   };
 
@@ -56,14 +43,13 @@ export default function SectionNavigator({ links, activeSection }) {
             >
               {/* Floating Label */}
               <AnimatePresence>
-                {(isActive || isEditMode) && (
+                {isActive && (
                   <motion.div 
-                    className={`nav-label-v2 ${isEditMode ? 'editable' : ''}`}
+                    className="nav-label-v2"
                     initial={{ opacity: 0, x: 20, scale: 0.8 }}
                     animate={{ opacity: 1, x: -15, scale: 1 }}
                     exit={{ opacity: 0, x: 20, scale: 0.8 }}
                     transition={{ duration: 0.4, ease: [0.2, 0.65, 0.3, 0.9] }}
-                    onClick={(e) => handleEditLabel(e, i, s.name)}
                   >
                     <span className="label-text">{s.name}</span>
                     <div className="label-line"></div>

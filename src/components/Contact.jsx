@@ -4,24 +4,12 @@ import TiltCard from './TiltCard';
 import { usePortfolioContext } from '../context/PortfolioContext';
 
 export default function Contact() {
-  const { portfolioData, isEditMode, updateSectionTitle: onUpdateTitle, updateContact: onUpdateContact } = usePortfolioContext();
+  const { portfolioData } = usePortfolioContext();
   const title = portfolioData.sectionTitles.contact;
   const contactData = portfolioData.contact || {};
   const formRef = useRef();
   const [isSending, setIsSending] = useState(false);
   const [status, setStatus] = useState(''); // '', 'success', 'error'
-
-  const handleEditTitle = () => {
-    if (!isEditMode) return;
-    const newTitle = prompt("Enter new section title:", title);
-    if (newTitle !== null) onUpdateTitle('contact', newTitle);
-  };
-
-  const handleEditContact = (field, currentVal) => {
-    if (!isEditMode) return;
-    const newVal = prompt(`Enter new ${field}:`, currentVal);
-    if (newVal !== null) onUpdateContact(field, newVal);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,10 +43,7 @@ export default function Contact() {
       >
         <div className="section-header">
           <span className="section-number">06</span>
-          <h2 
-            className={isEditMode ? 'editable' : ''} 
-            onClick={handleEditTitle}
-          >
+          <h2>
             {title}
           </h2>
           <div className="section-line"></div>
@@ -71,8 +56,6 @@ export default function Contact() {
                 key={item.id}
                 item={item}
                 idx={idx}
-                isEditMode={isEditMode}
-                onEdit={() => handleEditContact(item.id, item.value)}
               />
             ))}
           </div>
@@ -103,18 +86,17 @@ export default function Contact() {
   );
 }
 
-function ContactCard({ item, idx, isEditMode, onEdit }) {
+function ContactCard({ item, idx }) {
   const isExternal = item.id === 'facebook' || item.id === 'github';
   const href = item.value ? (item.value.startsWith('http') ? item.value : item.linkPrefix + item.value) : '#';
 
   return (
     <TiltCard className="contact-tilt-card">
       <motion.div 
-        className={`contact-item-card ${isEditMode ? 'editable-card' : ''}`}
+        className="contact-item-card"
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ delay: idx * 0.1 }}
-        onClick={isEditMode ? onEdit : undefined}
       >
         <div className="card-glow" style={{ background: `radial-gradient(circle at center, ${item.color}22, transparent)` }} />
         <div className="contact-icon" style={{ borderColor: item.color, color: item.color }}>
@@ -122,15 +104,10 @@ function ContactCard({ item, idx, isEditMode, onEdit }) {
         </div>
         <div className="contact-details">
           <span className="contact-label">{item.label}</span>
-          {isEditMode ? (
-            <span className="contact-value" style={{ color: 'var(--blue)' }}>{item.value || 'Click to set'}</span>
-          ) : (
-            <a href={href} target={isExternal ? "_blank" : undefined} rel="noopener noreferrer" className="contact-value">
-              {item.value || `Set your ${item.label}`}
-            </a>
-          )}
+          <a href={href} target={isExternal ? "_blank" : undefined} rel="noopener noreferrer" className="contact-value">
+            {item.value || `Set your ${item.label}`}
+          </a>
         </div>
-        {isEditMode && <div className="edit-indicator">✎</div>}
       </motion.div>
     </TiltCard>
   );

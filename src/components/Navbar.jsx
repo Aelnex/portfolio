@@ -3,7 +3,7 @@ import MagneticButton from './MagneticButton';
 import { usePortfolioContext } from '../context/PortfolioContext';
 
 export default function Navbar() {
-  const { portfolioData, isEditMode, updateNavbarLogo, updateNavbarLink } = usePortfolioContext();
+  const { portfolioData } = usePortfolioContext();
   const data = portfolioData.navbar;
 
   const [scrolled, setScrolled] = useState(false);
@@ -17,28 +17,13 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleEditLogo = (e) => {
-    if (!isEditMode) return;
-    e.preventDefault();
-    const newLogo = prompt("Enter new logo text:", data.logo);
-    if (newLogo !== null) updateNavbarLogo(newLogo);
-  };
-
-  const handleEditLink = (e, idx, currentName) => {
-    if (!isEditMode) return;
-    e.preventDefault();
-    const newName = prompt("Enter new link name:", currentName);
-    if (newName !== null) updateNavbarLink(idx, newName);
-  };
-
   return (
     <nav className={`glass-nav ${scrolled ? 'scrolled' : ''}`} id="main-nav">
       <div className="nav-content">
         <MagneticButton strength={0.2}>
           <a 
             href="#" 
-            className={`nav-logo ${isEditMode ? 'editable' : ''}`}
-            onClick={handleEditLogo}
+            className="nav-logo"
           >
             {data.logo}
           </a>
@@ -59,14 +44,7 @@ export default function Navbar() {
               <MagneticButton strength={0.15}>
                 <a 
                   href={link.href} 
-                  className={isEditMode ? 'editable' : ''}
-                  onClick={(e) => {
-                    if (isEditMode) {
-                      handleEditLink(e, idx, link.name);
-                    } else {
-                      setMenuOpen(false);
-                    }
-                  }}
+                  onClick={() => setMenuOpen(false)}
                 >
                   {link.name}
                 </a>

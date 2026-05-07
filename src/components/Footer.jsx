@@ -3,23 +3,14 @@ import MagneticButton from './MagneticButton';
 import { usePortfolioContext } from '../context/PortfolioContext';
 
 export default function Footer() {
-  const { portfolioData, isEditMode, updateFooterLogo: onUpdateLogo } = usePortfolioContext();
+  const { portfolioData } = usePortfolioContext();
   const data = portfolioData.footer;
   const currentYear = new Date().getFullYear();
-
-  const handleEditLogo = () => {
-    if (!isEditMode) return;
-    const newLogo = prompt("Enter new footer logo text:", data.logo);
-    if (newLogo !== null) onUpdateLogo(newLogo);
-  };
 
   return (
     <footer>
       <div className="footer-content">
-        <p 
-          className={`footer-logo ${isEditMode ? 'editable' : ''}`}
-          onClick={handleEditLogo}
-        >
+        <p className="footer-logo">
           {data.logo}
         </p>
         <p>&copy; <span>{currentYear}</span>. Built with React & ❤️</p>

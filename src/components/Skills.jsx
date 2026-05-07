@@ -3,42 +3,10 @@ import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-mot
 import { usePortfolioContext } from '../context/PortfolioContext';
 
 export default function Skills() {
-  const {
-    portfolioData,
-    isEditMode,
-    updateSectionTitle: onUpdateTitle,
-    updateSkill: onUpdateSkill,
-    addSkill: onAddSkill,
-    deleteSkill: onDeleteSkill,
-    updateSkillCategory: onUpdateCategory,
-    addSkillCategory: onAddCategory,
-    deleteSkillCategory: onDeleteCategory
-  } = usePortfolioContext();
+  const { portfolioData } = usePortfolioContext();
 
   const title = portfolioData.sectionTitles.skills;
   const skillCategories = portfolioData.skills;
-  
-  const handleEditSectionTitle = () => {
-    if (!isEditMode) return;
-    const newTitle = prompt("Enter new section title:", title);
-    if (newTitle !== null) onUpdateTitle('skills', newTitle);
-  };
-
-  const handleEditSkill = (catIdx, skillId, currentVal) => {
-    if (!isEditMode) return;
-    const newVal = prompt("Edit skill name:", currentVal);
-    if (newVal !== null && newVal.trim() !== '') {
-      onUpdateSkill(catIdx, skillId, 'name', newVal.trim());
-    }
-  };
-
-  const handleEditCategory = (catIdx, currentTitle) => {
-    if (!isEditMode) return;
-    const newTitle = prompt("Enter new category title:", currentTitle);
-    if (newTitle !== null && newTitle.trim() !== '') {
-      onUpdateCategory(catIdx, newTitle.trim());
-    }
-  };
 
   // Helper to get Bento class and icon dynamically based on content
   const getBentoInfo = (category, index) => {
@@ -71,10 +39,7 @@ export default function Skills() {
     <section id="skills" className="category-section">
       <div className="section-header">
         <span className="section-number">02</span>
-        <h2 
-          className={isEditMode ? 'editable' : ''} 
-          onClick={handleEditSectionTitle}
-        >
+        <h2>
           {title}
         </h2>
         <div className="section-line"></div>
@@ -105,31 +70,15 @@ export default function Skills() {
               category={category}
               catIdx={catIdx}
               info={info}
-              isEditMode={isEditMode}
-              handleEditCategory={handleEditCategory}
-              handleEditSkill={handleEditSkill}
-              onAddSkill={() => onAddSkill(catIdx)}
-              onDeleteSkill={onDeleteSkill}
-              onDeleteCategory={() => onDeleteCategory(catIdx)}
             />
           );
         })}
-        {isEditMode && (
-          <motion.div 
-            className="bento-item add-category-card"
-            whileHover={{ scale: 1.02 }}
-            onClick={onAddCategory}
-            style={{ cursor: 'pointer', border: '2px dashed var(--blue)', justifyContent: 'center', alignItems: 'center', background: 'rgba(0,212,255,0.05)' }}
-          >
-            <span style={{ fontSize: '2rem', color: 'var(--blue)' }}>+ Add Category</span>
-          </motion.div>
-        )}
       </div>
     </section>
   );
 }
 
-function BentoItem({ className, category, catIdx, info, isEditMode, handleEditCategory, handleEditSkill, onAddSkill, onDeleteSkill, onDeleteCategory }) {
+function BentoItem({ className, category, catIdx, info }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springX = useSpring(mouseX, { stiffness: 300, damping: 30 });
@@ -158,22 +107,9 @@ function BentoItem({ className, category, catIdx, info, isEditMode, handleEditCa
     >
       <div className="glow-bg" />
       
-      {isEditMode && (
-        <button 
-          className="delete-category-btn"
-          onClick={(e) => { e.stopPropagation(); onDeleteCategory(); }}
-          style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(255,0,0,0.2)', border: 'none', color: '#ff4d4d', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer', zIndex: 10 }}
-        >
-          ×
-        </button>
-      )}
-
       <div className="bento-content">
         <span className="bento-icon">{info.icon}</span>
-        <h3 
-          className={`bento-title ${isEditMode ? 'editable' : ''}`}
-          onClick={() => handleEditCategory(catIdx, category.title)}
-        >
+        <h3 className="bento-title">
           {category.title}
         </h3>
         <p className="bento-desc">{info.desc}</p>
@@ -182,33 +118,14 @@ function BentoItem({ className, category, catIdx, info, isEditMode, handleEditCa
           {(category.items || []).map((skill, idx) => (
             <div key={skill.id || idx} style={{ position: 'relative' }}>
               <motion.span 
-                className={`skill-chip ${isEditMode ? 'editable' : ''}`}
+                className="skill-chip"
                 whileHover={{ scale: 1.1, backgroundColor: 'rgba(0, 212, 255, 0.2)', borderColor: 'var(--blue)' }}
-                onClick={() => handleEditSkill(catIdx, skill.id, skill.name)}
-                style={{ fontSize: '0.85rem', padding: '4px 12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '100px', cursor: 'pointer', display: 'inline-block' }}
+                style={{ fontSize: '0.85rem', padding: '4px 12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '100px', display: 'inline-block' }}
               >
                 {skill.name}
               </motion.span>
-              {isEditMode && (
-                <button 
-                  onClick={(e) => { e.stopPropagation(); onDeleteSkill(catIdx, skill.id); }}
-                  style={{ position: 'absolute', top: '-5px', right: '-5px', width: '16px', height: '16px', borderRadius: '50%', background: '#ff4d4d', border: 'none', color: 'white', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 5 }}
-                >
-                  ×
-                </button>
-              )}
             </div>
           ))}
-          {isEditMode && (
-            <motion.button 
-              className="add-skill-chip"
-              onClick={onAddSkill}
-              whileHover={{ scale: 1.1 }}
-              style={{ fontSize: '0.85rem', padding: '4px 12px', border: '1px dashed var(--blue)', borderRadius: '100px', background: 'transparent', color: 'var(--blue)', cursor: 'pointer' }}
-            >
-              + Add Skill
-            </motion.button>
-          )}
         </div>
       </div>
     </motion.div>
