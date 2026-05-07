@@ -1,15 +1,30 @@
 #!/bin/bash
-echo "🚀 Starting Final Deployment with Your Data..."
+echo "🚀 Starting Deployment to GitHub Pages..."
 echo "-----------------------------------"
-read -p "Enter your GitHub Repo URL (e.g., https://github.com/user/repo.git): " REPO_URL
+
+# Get current repo URL if possible
+CURRENT_REPO=$(git remote get-url origin 2>/dev/null)
+
+if [ -z "$CURRENT_REPO" ]; then
+    read -p "Enter your GitHub Repo URL (e.g., https://github.com/user/repo.git): " REPO_URL
+else
+    echo "Using existing remote: $CURRENT_REPO"
+    REPO_URL=$CURRENT_REPO
+fi
 
 if [ -z "$REPO_URL" ]; then
     echo "❌ Error: Repo URL is required."
     exit 1
 fi
 
-git remote remove origin
+# Ensure origin is correct
+git remote remove origin 2>/dev/null
 git remote add origin $REPO_URL
+
+echo "💾 Saving source code to GitHub (main)..."
+git add .
+git commit -m "Update portfolio: $(date)"
+git push -u origin main --force
 
 echo "📦 Building project for production..."
 npm run build
@@ -19,20 +34,19 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "💾 Saving your actual data to GitHub..."
-git add .
-git commit -m "Update portfolio with actual user data"
-
-echo "⬆️ Pushing to GitHub..."
-git push -u origin main --force
+echo "⬆️ Deploying build output (dist) to GitHub Pages (gh-pages)..."
+# Create a temporary git repo in dist to push to gh-pages branch
+cd dist
+git init
+git add -A
+git commit -m "Deploy to GitHub Pages"
+git push -f "$REPO_URL" master:gh-pages
 
 if [ $? -eq 0 ]; then
     echo "-----------------------------------"
-    echo "✅ SUCCESS! Your REAL portfolio is now on GitHub."
+    echo "✅ SUCCESS! Your portfolio is now deployed to GitHub Pages."
     echo "🔗 Repo: $REPO_URL"
-    echo ""
-    echo "Now Vercel will automatically update your site (wait about 1 minute)."
-    echo "You can then send the Vercel link to your teacher!"
+    echo "👉 Go to Repository Settings > Pages and ensure 'Branch' is set to 'gh-pages'."
 else
-    echo "❌ Push failed. Make sure your GitHub URL is correct and you have permission."
+    echo "❌ Deployment failed."
 fi
