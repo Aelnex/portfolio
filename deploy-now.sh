@@ -40,7 +40,7 @@ cd dist
 git init
 git add -A
 git commit -m "Deploy to GitHub Pages"
-git push -f "$REPO_URL" master:gh-pages
+git push -f "$REPO_URL" HEAD:gh-pages
 
 if [ $? -eq 0 ]; then
     echo "-----------------------------------"
